@@ -19,6 +19,13 @@ function notHeader(option) {
   return !option.header;
 }
 
+function stopPropagation(event) {
+  event.stopPropagation();
+  event.preventDefault();
+  event.nativeEvent.stopImmediatePropagation();
+  // document listener does not use SyntheticEvents
+}
+
 export default class Select extends Component {
   static propTypes = {
     placeholder: Types.string,
@@ -82,13 +89,6 @@ export default class Select extends Component {
 
   handleSearchChange = event => this.props.onSearchChange(event.target.value);
 
-  stopPropagation = (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    event.nativeEvent.stopImmediatePropagation();
-    // document listener does not use SyntheticEvents
-  };
-
   handleKeyDown = (event) => {
     switch (event.keyCode) {
       case KeyCodes.UP:
@@ -148,7 +148,7 @@ export default class Select extends Component {
 
   handleButtonClick = (event) => {
     if (!this.props.disabled) {
-      this.stopPropagation(event);
+      stopPropagation(event);
       this.open();
     }
   }
@@ -161,7 +161,7 @@ export default class Select extends Component {
 
   createSelectHandlerForOption(option) {
     return (event) => {
-      this.stopPropagation(event);
+      stopPropagation(event);
       this.selectOption(option);
     };
   }
@@ -193,7 +193,7 @@ export default class Select extends Component {
               className="form-control tw-select-filter"
               placeholder={searchPlaceholder}
               onChange={this.handleSearchChange}
-              onClick={this.stopPropagation}
+              onClick={stopPropagation}
               value={searchValue}
             />
           </div>
@@ -219,7 +219,7 @@ export default class Select extends Component {
       return (
         <li // eslint-disable-line jsx-a11y/no-static-element-interactions
           key={index}
-          onClick={this.stopPropagation}
+          onClick={stopPropagation}
           className="dropdown-header"
         >
           {option.header}
