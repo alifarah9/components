@@ -116,7 +116,6 @@ export default class Select extends Component {
 
   moveFocusWithDifference(difference) {
     this.setState((previousState, previousProps) => {
-      // TODO: selectedOptionIndex needs to be without header elements
       const optionsWithoutHeaders = previousProps.options.filter(notHeader);
       const selectedOptionIndex = optionsWithoutHeaders.reduce((optionIndex, current, index) => {
         if (optionIndex !== null) {
