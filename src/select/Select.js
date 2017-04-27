@@ -9,6 +9,7 @@ const KeyCodes = {
   DOWN: 40,
   UP: 38,
   ENTER: 13,
+  ESC: 27,
 };
 
 function clamp(from, to, value) {
@@ -101,6 +102,10 @@ export default class Select extends Component {
         break;
       case KeyCodes.ENTER:
         this.selectKeyboardFocusedOption();
+        event.preventDefault();
+        break;
+      case KeyCodes.ESC:
+        this.close();
         event.preventDefault();
         break;
       default: break;
