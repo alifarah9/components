@@ -155,7 +155,7 @@ export default class Select extends Component {
       stopPropagation(event);
       this.open();
     }
-  }
+  };
 
   handleDocumentClick = () => {
     if (this.state.open) {
