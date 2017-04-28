@@ -14,7 +14,7 @@ describe('Select', () => {
     DOWN: 40,
     UP: 38,
     ENTER: 13,
-    ESC: 27,
+    ESCAPE: 27,
   };
 
   function mountComponent() {
@@ -118,10 +118,9 @@ describe('Select', () => {
     expectDropdownToBe().closed();
   });
 
-  it('can be closed by pressing ESC', () => {
-    mountComponent(); // Need lifecycle methods to be called.
+  it('can be closed by pressing escape', () => {
     openSelect();
-    component.simulate('keyDown', fakeKeyDownEventForKey(KeyCodes.ESC));
+    component.simulate('keyDown', fakeKeyDownEventForKey(KeyCodes.ESCAPE));
     expectDropdownToBe().closed();
   });
 
