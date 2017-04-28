@@ -79,13 +79,12 @@ export default class Select extends Component {
   }
 
   getIndexWithoutHeadersForOptionWithIndex(index) {
-    let indexWithoutHeaders = 0;
-    this.props.options.forEach((option, currentIndex) => {
+    return this.props.options.reduce((sum, option, currentIndex) => {
       if (currentIndex < index && notHeader(option)) {
-        indexWithoutHeaders += 1;
+        return sum + 1;
       }
-    });
-    return indexWithoutHeaders;
+      return sum;
+    }, 0);
   }
 
   handleSearchChange = event => this.props.onSearchChange(event.target.value);
