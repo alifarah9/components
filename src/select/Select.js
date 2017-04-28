@@ -78,7 +78,7 @@ export default class Select extends Component {
     document.removeEventListener('click', this.handleDocumentClick, false);
   }
 
-  getIndexWithoutHeadersForOptionWithIndex(index) {
+  getIndexWithoutHeadersForIndexWithHeaders(index) {
     return this.props.options.reduce((sum, option, currentIndex) => {
       if (currentIndex < index && notHeader(option)) {
         return sum + 1;
@@ -234,7 +234,7 @@ export default class Select extends Component {
     const isActive = (
       (this.props.selected && this.props.selected.value === option.value) ||
       this.state.keyboardFocusedOptionIndex ===
-        this.getIndexWithoutHeadersForOptionWithIndex(index)
+        this.getIndexWithoutHeadersForIndexWithHeaders(index)
     );
 
     return (
