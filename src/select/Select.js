@@ -268,7 +268,6 @@ export default class Select extends Component {
     return (
       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
         className={groupClass}
-        aria-hidden="false"
         onKeyDown={this.handleKeyDown}
       >
         <button
