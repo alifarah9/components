@@ -155,7 +155,7 @@ describe('Stepper', () => {
     });
 
     it('are marked as visited when active index is less than or equals to current index', () => {
-      const step = index => {
+      const step = (index) => {
         const btnStates = ['tw-stepper__step--visited', 'tw-stepper__step--active'];
         const stepEl = component.find('.tw-stepper__step').at(index);
         return {
@@ -181,15 +181,15 @@ describe('Stepper', () => {
       expect(step(2).visitedAndActive).toBe(false);
       expect(step(3).visitedAndActive).toBe(false);
       expect(step(1).disabled).toBe(true);
-    
+
       activeStep(1);
-      
+
       expect(step(1).visitedAndActive).toBe(true);
       expect(step(0).active).toBe(false);
       expect(step(0).visited).toBe(true);
-      
+
       activeStep(3);
-    
+
       expect(step(0).visited).toBe(true);
       expect(step(1).visited).toBe(true);
       expect(step(2).visited).toBe(false);
@@ -225,7 +225,7 @@ describe('Stepper', () => {
         step(0)
           .children()
           .prop('label'),
-      ).toEqual(<span dangerouslySetInnerHTML={{ __html: 'hover <p>label</p>' }} />);
+      ).toEqual(<span dangerouslySetInnerHTML={{ __html: 'hover <p>label</p>' }} />); // eslint-disable-line react/no-danger
       expect(
         step(1)
           .children()
