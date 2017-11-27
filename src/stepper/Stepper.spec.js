@@ -155,8 +155,6 @@ describe('Stepper', () => {
     });
 
     it('are marked as visited when active index is less than or equals to current index', () => {
-      let component1 = shallow(<Stepper {...props} />);
-      
       const step = index => {
         const btnStates = ['tw-stepper__step--visited', 'tw-stepper__step--active'];
         const stepEl = component.find('.tw-stepper__step').at(index);
