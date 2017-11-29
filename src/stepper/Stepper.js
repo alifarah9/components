@@ -19,12 +19,11 @@ const Stepper = ({ steps, activeStep }) => {
   const renderStep = (step, index) => {
     const clickable = step.onClick && index < activeStepIndex;
     const active = index === activeStepIndex;
-    const visited = index > activeStepIndex && step.onClick;
-    const disabled = !clickable && !visited;
+    const disabled = !clickable && !step.visited;
 
     const stepClasses = classNames({
       'tw-stepper__step--active': active,
-      'tw-stepper__step--visited': visited,
+      'tw-stepper__step--visited': step.visited,
       'tw-stepper__step--clickable': clickable,
     });
 

@@ -94,7 +94,14 @@ export default class StepperDocs extends Component {
                 label: `${index} - ${step.label}`,
                 value: index,
               }))}
-              onChange={value => value && this.setState({ activeStep: value.value })}
+              onChange={(value) => {
+                if (value) {
+                  const preset = this.state.preset;
+                  const stepIndex = preset.steps.findIndex(s => s.label === value.label.substr(4));
+                  preset.steps[stepIndex].visited = preset.steps[stepIndex].onClick;
+                  this.setState({ activeStep: value.value, preset });
+                }
+              }}
               selected={{
                 label: `${this.state.activeStep} - ${this.state.preset.steps[this.state.activeStep]
                   .label}`,
