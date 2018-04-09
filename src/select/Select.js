@@ -27,7 +27,10 @@ export default class Select extends Component {
     id: Types.string,
     required: Types.bool,
     disabled: Types.bool,
-    size: Types.oneOf(['xs', 'sm', 'md', 'lg']),
+    inverse: Types.bool,
+    dropdownRight: Types.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
+    dropdownWidth: Types.oneOf(['sm', 'md', 'lg']),
+    size: Types.oneOf(['sm', 'md', 'lg']),
     block: Types.bool,
     selected: Types.shape({
       value: Types.any.isRequired,
@@ -59,6 +62,9 @@ export default class Select extends Component {
     id: undefined,
     placeholder: 'Select an option...',
     size: 'md',
+    dropdownRight: null,
+    dropdownWidth: null,
+    inverse: false,
     required: false,
     disabled: false,
     block: true,
@@ -265,7 +271,9 @@ export default class Select extends Component {
       <li // eslint-disable-line jsx-a11y/no-static-element-interactions
         key={index}
         onClick={this.createSelectHandlerForOption(option)}
-        className={`tw-dropdown-item--clickable ${isActive ? this.style('active') : ''}`}
+        className={`tw-dropdown-item tw-dropdown-item--clickable ${
+          isActive ? this.style('active') : ''
+        }`}
       >
         <a>
           <Option {...option} classNames={this.props.classNames} />
@@ -302,7 +310,19 @@ export default class Select extends Component {
     const groupClass = `${btnGroup} ${block ? btnBlock : ''} ${dropdown} ${
       open ? openDropdown : ''
     }`;
-    const buttonClass = `${btn} ${btnInput} ${btnSize[size]} ${dropdownToggle}`;
+    const inverse = this.props.inverse
+      ? `${this.style('btn-input-inverse')} ${this.style('btn-addon')}`
+      : '';
+    const buttonClass = `${btn} ${btnInput} ${inverse} ${btnSize[size]}  ${dropdownToggle}`;
+
+    const dropdownMenu = this.style('dropdown-menu');
+    const dropdownRight = this.props.dropdownRight
+      ? this.style(`dropdown-menu-${this.props.dropdownRight}-right`)
+      : '';
+    const dropdownWidth = this.props.dropdownWidth
+      ? this.style(`dropdown-menu-${this.props.dropdownWidth}`)
+      : '';
+    const dropdownClass = `${dropdownMenu} ${dropdownRight} ${dropdownWidth}`;
     return (
       <div // eslint-disable-line jsx-a11y/no-static-element-interactions
         className={groupClass}
@@ -320,7 +340,7 @@ export default class Select extends Component {
           <span className={this.style('caret')} />
         </button>
         {open ? (
-          <ul className={this.style('dropdown-menu')} role="menu">
+          <ul className={dropdownClass} role="menu">
             {!required && !canSearch ? this.renderPlaceHolderOption() : ''}
             {canSearch ? this.renderSearchBox() : ''}
             {this.renderOptions()}

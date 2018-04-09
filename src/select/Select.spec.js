@@ -246,6 +246,38 @@ describe('Select', () => {
     expect(component.find('ul').text()).not.toContain('ayy lmao');
   });
 
+  it('can be inverse coloured', () => {
+    expect(component.find('.btn-input').hasClass('btn-input-inverse')).toBe(false);
+    component.setProps({ inverse: true });
+    expect(component.find('.btn-input').hasClass('btn-input-inverse')).toBe(true);
+  });
+
+  it('can be given a dropdown width', () => {
+    openSelect();
+    ['sm', 'md', 'lg'].forEach(dropdownWidth => {
+      expect(component.find('.dropdown-menu').hasClass(`dropdown-menu-${dropdownWidth}`)).toBe(
+        false,
+      );
+      component.setProps({ dropdownWidth });
+      expect(component.find('.dropdown-menu').hasClass(`dropdown-menu-${dropdownWidth}`)).toBe(
+        true,
+      );
+    });
+  });
+
+  it('can be given a breakpoint to make the dropdown open from the right', () => {
+    openSelect();
+    ['xs', 'sm', 'md', 'lg', 'xl'].forEach(dropdownRight => {
+      expect(
+        component.find('.dropdown-menu').hasClass(`dropdown-menu-${dropdownRight}-right`),
+      ).toBe(false);
+      component.setProps({ dropdownRight });
+      expect(
+        component.find('.dropdown-menu').hasClass(`dropdown-menu-${dropdownRight}-right`),
+      ).toBe(true);
+    });
+  });
+
   it('allows you to move around items with arrow keys while ignoring headers', () => {
     component.setProps({
       options: [
@@ -327,7 +359,7 @@ describe('Select', () => {
 
   it('can have different sizes', () => {
     expect(openerButton().hasClass('btn-md')).toBe(true);
-    ['xs', 'sm', 'md', 'lg'].forEach(size => {
+    ['sm', 'md', 'lg'].forEach(size => {
       component.setProps({ size });
       expect(openerButton().hasClass(`btn-${size}`)).toBe(true);
     });
