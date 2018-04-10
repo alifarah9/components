@@ -17,7 +17,7 @@ class MoneyInput extends Component {
     selectedCurrency: Currency.isRequired,
     onCurrencyChange: Types.func.isRequired,
     amount: Types.number.isRequired,
-    size: Types.oneOf(['xs', 'sm', 'md', 'lg']),
+    size: Types.oneOf(['sm', 'md', 'lg']),
     onAmountChange: Types.func.isRequired,
   };
 
