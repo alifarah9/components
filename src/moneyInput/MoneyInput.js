@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Types from 'prop-types';
 import Select from '../select';
 
+import { formatNumber, parseNumber } from './numberFormatting';
+
 const Currency = Types.shape({
   header: Types.string,
   value: Types.string,
@@ -19,18 +21,64 @@ class MoneyInput extends Component {
     amount: Types.number.isRequired,
     size: Types.oneOf(['sm', 'md', 'lg']),
     onAmountChange: Types.func.isRequired,
+    numberFormatLocale: Types.string,
+    numberFormatPrecision: Types.number,
   };
 
   static defaultProps = {
     size: 'lg',
+    numberFormatLocale: 'en-GB',
+    numberFormatPrecision: 2,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       searchQuery: '',
+      formattedAmount: formatNumber(
+        props.amount,
+        props.numberFormatLocale,
+        props.numberFormatPrecision,
+      ),
+      amountFocused: false,
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.amountFocused) {
+      this.setState({
+        formattedAmount: formatNumber(
+          nextProps.amount,
+          nextProps.numberFormatLocale,
+          nextProps.numberFormatPrecision,
+        ),
+      });
+    }
+  }
+
+  onAmountChange = event => {
+    const { value } = event.target;
+    this.setState({
+      formattedAmount: value,
+    });
+    const parsed = parseNumber(
+      value,
+      this.props.numberFormatLocale,
+      this.props.numberFormatPrecision,
+    );
+    if (!Number.isNaN(parsed)) {
+      this.props.onAmountChange(parsed);
+    }
+  };
+
+  onAmountBlur = () => {
+    this.amountFocused = false;
+    this.formatAmount();
+  };
+
+  onAmountFocus = () => {
+    this.amountFocused = true;
+  };
 
   getSelectOptions() {
     const headerMapping = this.props.currencies.reduce(
@@ -62,6 +110,28 @@ class MoneyInput extends Component {
     });
   }
 
+  formatAmount() {
+    this.setState(previousState => {
+      const parsed = parseNumber(
+        previousState.formattedAmount,
+        this.props.numberFormatLocale,
+        this.props.numberFormatPrecision,
+      );
+      if (Number.isNaN(parsed)) {
+        return {
+          formattedAmount: previousState.formattedAmount,
+        };
+      }
+      return {
+        formattedAmount: formatNumber(
+          parsed,
+          this.props.numberFormatLocale,
+          this.props.numberFormatPrecision,
+        ),
+      };
+    });
+  }
+
   includeCurrencyInSearchResults(currency) {
     const searchQuery = this.state.searchQuery.toLowerCase();
     return (
@@ -73,14 +143,17 @@ class MoneyInput extends Component {
   }
 
   render() {
-    const { selectedCurrency, amount, onAmountChange, onCurrencyChange, size } = this.props;
+    const { selectedCurrency, onCurrencyChange, size } = this.props;
     // TODO: amount handling
     return (
       <div className={`input-group input-group-${size}`}>
         <input
-          value={amount}
+          value={this.state.formattedAmount}
+          type="text"
           className="form-control"
-          onChange={event => onAmountChange(parseInt(event.target.value, 10))}
+          onChange={this.onAmountChange}
+          onFocus={this.onAmountFocus}
+          onBlur={this.onAmountBlur}
         />
         <span className="input-group-btn amount-currency-select-btn">
           <Select
