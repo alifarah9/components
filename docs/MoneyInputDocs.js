@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { MoneyInput, Select } from '../src';
+import { formatNumber } from '../src/moneyInput/numberFormatting';
 
 const currencies = [
   {
@@ -43,6 +44,24 @@ const currencies = [
   },
 ];
 
+function formattingWorksWithPrecision(precision) {
+  try {
+    formatNumber(10, undefined, precision);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function formattingWorksWithLocale(locale) {
+  try {
+    formatNumber(10, locale);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export default class MoneyInputDocs extends Component {
   constructor(props) {
     super(props);
@@ -51,6 +70,11 @@ export default class MoneyInputDocs extends Component {
       amount: 1000,
       numberFormatLocale: 'en-GB',
       numberFormatPrecision: 2,
+      form: {
+        numberFormatLocale: 'en-GB',
+        numberFormatPrecision: '2',
+        amount: '1000',
+      },
     };
   }
 
@@ -88,7 +112,7 @@ export default class MoneyInputDocs extends Component {
               <pre className="tw-docs-code">
                 {`<MoneyInput
   amount={${this.state.amount}}
-  numberFormatLocale={${this.state.numberFormatLocale}}
+  numberFormatLocale={"${this.state.numberFormatLocale}"}
   numberFormatPrecision={${this.state.numberFormatPrecision}}
   onAmountChange={[a function]}
   onCurrencyChange={[a function]}
@@ -124,12 +148,21 @@ export default class MoneyInputDocs extends Component {
                 id="money-input-amount-selector"
                 type="number"
                 className="form-control"
-                value={this.state.amount}
-                onChange={event =>
-                  this.setState({
-                    amount: parseFloat(event.target.value),
-                  })
-                }
+                value={this.state.form.amount}
+                onChange={event => {
+                  const { target: { value: amount } } = event;
+                  this.setState(
+                    ({ form }) => ({
+                      form: { ...form, amount },
+                    }),
+                    () => {
+                      const parsed = parseInt(amount, 10);
+                      if (!Number.isNaN(parsed)) {
+                        this.setState({ amount: parsed });
+                      }
+                    },
+                  );
+                }}
               />
               <div className="m-t-3" />
               <label htmlFor="money-input-number-format-locale-selector" className="control-label">
@@ -139,12 +172,20 @@ export default class MoneyInputDocs extends Component {
                 id="money-input-number-format-locale-selector"
                 type="text"
                 className="form-control"
-                value={this.state.numberFormatLocale}
-                onChange={event =>
-                  this.setState({
-                    numberFormatLocale: event.target.value,
-                  })
-                }
+                value={this.state.form.numberFormatLocale}
+                onChange={event => {
+                  const { target: { value: numberFormatLocale } } = event;
+                  this.setState(
+                    ({ form }) => ({
+                      form: { ...form, numberFormatLocale },
+                    }),
+                    () => {
+                      if (formattingWorksWithLocale(numberFormatLocale)) {
+                        this.setState({ numberFormatLocale });
+                      }
+                    },
+                  );
+                }}
               />
               <div className="m-t-3" />
               <label
@@ -157,12 +198,21 @@ export default class MoneyInputDocs extends Component {
                 id="money-input-number-format-precision-selector"
                 type="number"
                 className="form-control"
-                value={this.state.numberFormatPrecision}
-                onChange={event =>
-                  this.setState({
-                    numberFormatPrecision: parseInt(event.target.value, 10),
-                  })
-                }
+                value={this.state.form.numberFormatPrecision}
+                onChange={event => {
+                  const { target: { value: numberFormatPrecision } } = event;
+                  this.setState(
+                    ({ form }) => ({
+                      form: { ...form, numberFormatPrecision },
+                    }),
+                    () => {
+                      const parsed = parseInt(this.state.form.numberFormatPrecision, 10);
+                      if (!Number.isNaN(parsed) && formattingWorksWithPrecision(parsed)) {
+                        this.setState({ numberFormatPrecision: parsed });
+                      }
+                    },
+                  );
+                }}
               />
             </div>
           </div>
