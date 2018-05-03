@@ -14,6 +14,8 @@ export default class SelectDocs extends Component {
       { header: 'Currencies' },
       { value: 4, label: 'British Pound', currency: 'gbp' },
       { value: 5, label: 'Euro', currency: 'eur' },
+      { separator: true },
+      { value: 6, label: 'Something else' },
     ];
     this.state = {
       selectedOption: null,

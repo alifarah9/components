@@ -278,13 +278,14 @@ describe('Select', () => {
     });
   });
 
-  it('allows you to move around items with arrow keys while ignoring headers', () => {
+  it('allows you to move around items with arrow keys while ignoring headers and separators', () => {
     component.setProps({
       options: [
         { value: 0, label: 'yo' },
         { value: 1, label: 'dawg' },
         { header: 'ignore me' },
         { value: 2, label: 'yo' },
+        { separator: true }, // ignore me too
         { value: 3, label: 'dawg' },
         { header: 'ignore me too' },
         { value: 4, label: 'dawg' },
@@ -300,11 +301,11 @@ describe('Select', () => {
 
     doTimes(4, () => component.simulate('keyDown', fakeKeyDownEventForKey(KEY_CODES.DOWN)));
     expect(findNthListElement(3).hasClass('active')).toBe(false);
-    expect(findNthListElement(7).hasClass('active')).toBe(true); // skips header again!
+    expect(findNthListElement(8).hasClass('active')).toBe(true); // skips header and separator again!
 
     expect(findNthListElement(0).hasClass('active')).toBe(false);
     doTimes(5, () => component.simulate('keyDown', fakeKeyDownEventForKey(KEY_CODES.UP)));
-    expect(findNthListElement(7).hasClass('active')).toBe(false);
+    expect(findNthListElement(8).hasClass('active')).toBe(false);
     expect(findNthListElement(0).hasClass('active')).toBe(true);
   });
 
@@ -377,5 +378,14 @@ describe('Select', () => {
   it('passes the given id forward to the button', () => {
     component.setProps({ id: 'some-id' });
     expect(component.find('#some-id').type()).toBe('button');
+  });
+
+  it('renders separators', () => {
+    component.setProps({
+      options: [{ separator: true }],
+    });
+    openSelect();
+    expect(findNthListElement(1).prop('className')).toBe('divider');
+    expect(findNthListElement(1).children().length).toBe(0);
   });
 });

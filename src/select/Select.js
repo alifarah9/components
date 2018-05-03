@@ -10,8 +10,8 @@ function clamp(from, to, value) {
   return Math.max(Math.min(to, value), from);
 }
 
-function notHeader(option) {
-  return !option.header;
+function actionableOption(option) {
+  return !option.header && !option.separator;
 }
 
 function stopPropagation(event) {
@@ -50,6 +50,7 @@ export default class Select extends Component {
         currency: Types.string,
         note: Types.string,
         secondary: Types.string,
+        separator: Types.bool,
       }),
     ).isRequired,
     onSearchChange: Types.func,
@@ -86,7 +87,7 @@ export default class Select extends Component {
 
   getIndexWithoutHeadersForIndexWithHeaders(index) {
     return this.props.options.reduce((sum, option, currentIndex) => {
-      if (currentIndex < index && notHeader(option)) {
+      if (currentIndex < index && actionableOption(option)) {
         return sum + 1;
       }
       return sum;
@@ -143,13 +144,13 @@ export default class Select extends Component {
   selectKeyboardFocusedOption() {
     if (this.state.keyboardFocusedOptionIndex !== null) {
       const index = this.state.keyboardFocusedOptionIndex;
-      this.selectOption(this.props.options.filter(notHeader)[index]);
+      this.selectOption(this.props.options.filter(actionableOption)[index]);
     }
   }
 
   moveFocusWithDifference(difference) {
     this.setState((previousState, previousProps) => {
-      const optionsWithoutHeaders = previousProps.options.filter(notHeader);
+      const optionsWithoutHeaders = previousProps.options.filter(actionableOption);
       const selectedOptionIndex = optionsWithoutHeaders.reduce((optionIndex, current, index) => {
         if (optionIndex !== null) {
           return optionIndex;
@@ -251,6 +252,10 @@ export default class Select extends Component {
   }
 
   renderOption = (option, index) => {
+    if (option.separator) {
+      return <li key={index} className={this.style('divider')} />;
+    }
+
     if (option.header) {
       return (
         <li // eslint-disable-line jsx-a11y/no-static-element-interactions
