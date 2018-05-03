@@ -64,16 +64,22 @@ export default class MoneyInputDocs extends Component {
               <p>Cash makes the world go round</p>
             </div>
             <div className="col-md-6">
-              <MoneyInput
-                currencies={currencies}
-                amount={this.state.amount}
-                numberFormatLocale={this.state.numberFormatLocale}
-                numberFormatPrecision={this.state.numberFormatPrecision}
-                size={this.state.size}
-                onAmountChange={amount => this.setState({ amount })}
-                selectedCurrency={this.state.selectedCurrency}
-                onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
-              />
+              <div className={`form-group form-group-${this.state.size || 'lg'}`}>
+                <label htmlFor="money-input" className="control-label">
+                  How much?
+                </label>
+                <MoneyInput
+                  id="money-input"
+                  currencies={currencies}
+                  amount={this.state.amount}
+                  numberFormatLocale={this.state.numberFormatLocale}
+                  numberFormatPrecision={this.state.numberFormatPrecision}
+                  size={this.state.size}
+                  onAmountChange={amount => this.setState({ amount })}
+                  selectedCurrency={this.state.selectedCurrency}
+                  onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
+                />
+              </div>
             </div>
           </div>
           <div className="row">

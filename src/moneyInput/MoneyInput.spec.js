@@ -289,4 +289,10 @@ describe('Money Input', () => {
     enterAmount('cannot parse this yo');
     expect(onAmountChange).not.toHaveBeenCalled();
   });
+
+  it('passes the id given to the input element', () => {
+    expect(amountInput().prop('id')).toBeUndefined();
+    component.setProps({ id: 'some-id' });
+    expect(amountInput().prop('id')).toBe('some-id');
+  });
 });

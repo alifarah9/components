@@ -15,6 +15,7 @@ const Currency = Types.shape({
 
 class MoneyInput extends Component {
   static propTypes = {
+    id: Types.string,
     currencies: Types.arrayOf(Currency).isRequired,
     selectedCurrency: Currency.isRequired,
     onCurrencyChange: Types.func.isRequired,
@@ -26,6 +27,7 @@ class MoneyInput extends Component {
   };
 
   static defaultProps = {
+    id: undefined,
     size: 'lg',
     numberFormatLocale: 'en-GB',
     numberFormatPrecision: 2,
@@ -148,6 +150,7 @@ class MoneyInput extends Component {
     return (
       <div className={`input-group input-group-${size}`}>
         <input
+          id={this.props.id}
           value={this.state.formattedAmount}
           type="text"
           className="form-control"
