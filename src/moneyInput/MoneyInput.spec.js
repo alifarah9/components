@@ -95,6 +95,10 @@ describe('Money Input', () => {
     amountInput().simulate('change', { target: { value: amount } });
   }
 
+  function addon() {
+    return component.find('.input-group-addon').first();
+  }
+
   it('renders a select with all the currencies as options', () => {
     expect(currencySelect().length).toBe(1);
     expect(displayedCurrencies()).toEqual(props.currencies);
@@ -294,5 +298,17 @@ describe('Money Input', () => {
     expect(amountInput().prop('id')).toBeUndefined();
     component.setProps({ id: 'some-id' });
     expect(amountInput().prop('id')).toBe('some-id');
+  });
+
+  it('renders addon when element is passed through props', () => {
+    const addonElement = <span id="test-addon" />;
+    component.setProps({ addon: addonElement });
+    expect(addon().length).toEqual(1);
+    const passedInAddon = () =>
+      addon()
+        .children()
+        .first();
+    expect(passedInAddon().prop('id')).toBe('test-addon');
+    expect(passedInAddon().type()).toBe('span');
   });
 });

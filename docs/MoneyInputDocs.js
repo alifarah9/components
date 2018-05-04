@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { MoneyInput, Select } from '../src';
+import { MoneyInput, Select, Checkbox } from '../src';
 import { formatNumber } from '../src/moneyInput/numberFormatting';
 
 const currencies = [
@@ -75,6 +75,7 @@ export default class MoneyInputDocs extends Component {
         numberFormatPrecision: '2',
         amount: '1000',
       },
+      addonEnabled: false,
     };
   }
 
@@ -102,6 +103,7 @@ export default class MoneyInputDocs extends Component {
                   onAmountChange={amount => this.setState({ amount })}
                   selectedCurrency={this.state.selectedCurrency}
                   onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
+                  addon={this.state.addonEnabled ? <i className="icon icon-unlock" /> : undefined}
                 />
               </div>
             </div>
@@ -117,6 +119,7 @@ export default class MoneyInputDocs extends Component {
   onAmountChange={[a function]}
   onCurrencyChange={[a function]}
   size={${this.state.size ? `"${this.state.size}"` : undefined}}
+  addon={${this.state.addonEnabled ? '<i className="icon icon-unlock" />' : undefined}}
   selectedCurrency={${
     this.state.selectedCurrency ? JSON.stringify(this.state.selectedCurrency, null, '  ') : null
   }}
@@ -150,7 +153,9 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.amount}
                 onChange={event => {
-                  const { target: { value: amount } } = event;
+                  const {
+                    target: { value: amount },
+                  } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, amount },
@@ -174,7 +179,9 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.numberFormatLocale}
                 onChange={event => {
-                  const { target: { value: numberFormatLocale } } = event;
+                  const {
+                    target: { value: numberFormatLocale },
+                  } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, numberFormatLocale },
@@ -200,7 +207,9 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.numberFormatPrecision}
                 onChange={event => {
-                  const { target: { value: numberFormatPrecision } } = event;
+                  const {
+                    target: { value: numberFormatPrecision },
+                  } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, numberFormatPrecision },
@@ -213,6 +222,14 @@ export default class MoneyInputDocs extends Component {
                     },
                   );
                 }}
+              />
+              <div className="m-t-3" />
+              <Checkbox
+                label={'Addon'}
+                onChange={() => this.setState({ addonEnabled: !this.state.addonEnabled })}
+                required={false}
+                disabled={false}
+                checked={this.state.addonEnabled}
               />
             </div>
           </div>

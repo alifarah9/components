@@ -24,6 +24,7 @@ class MoneyInput extends Component {
     onAmountChange: Types.func.isRequired,
     numberFormatLocale: Types.string,
     numberFormatPrecision: Types.number,
+    addon: Types.element,
   };
 
   static defaultProps = {
@@ -31,6 +32,7 @@ class MoneyInput extends Component {
     size: 'lg',
     numberFormatLocale: 'en-GB',
     numberFormatPrecision: 2,
+    addon: undefined,
   };
 
   constructor(props) {
@@ -145,7 +147,7 @@ class MoneyInput extends Component {
   }
 
   render() {
-    const { selectedCurrency, onCurrencyChange, size } = this.props;
+    const { selectedCurrency, onCurrencyChange, size, addon } = this.props;
     // TODO: amount handling
     return (
       <div className={`input-group input-group-${size}`}>
@@ -158,6 +160,7 @@ class MoneyInput extends Component {
           onFocus={this.onAmountFocus}
           onBlur={this.onAmountBlur}
         />
+        {addon && <span className={`input-group-addon input-${size}`}>{addon}</span>}
         <span className="input-group-btn amount-currency-select-btn">
           <Select
             options={this.getSelectOptions()}
