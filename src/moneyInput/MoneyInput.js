@@ -26,6 +26,7 @@ class MoneyInput extends Component {
     numberFormatLocale: Types.string,
     numberFormatPrecision: Types.number,
     disabled: Types.bool,
+    searchPlaceholder: Types.string,
   };
 
   static defaultProps = {
@@ -34,6 +35,7 @@ class MoneyInput extends Component {
     numberFormatLocale: 'en-GB',
     numberFormatPrecision: 2,
     disabled: false,
+    searchPlaceholder: '',
   };
 
   constructor(props) {
@@ -190,6 +192,7 @@ class MoneyInput extends Component {
               options={selectOptions}
               selected={{ ...selectedCurrency, note: null }}
               onChange={onCurrencyChange}
+              searchPlaceholder={this.props.searchPlaceholder}
               onSearchChange={searchQuery => this.setState({ searchQuery })}
               searchValue={this.state.searchQuery}
               size={size}

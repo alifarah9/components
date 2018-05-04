@@ -72,6 +72,7 @@ export default class MoneyInputDocs extends Component {
       numberFormatPrecision: 2,
       fixedCurrency: false,
       disabled: false,
+      searchPlaceholder: 'Type a currency or country',
       form: {
         numberFormatLocale: 'en-GB',
         numberFormatPrecision: '2',
@@ -118,6 +119,7 @@ export default class MoneyInputDocs extends Component {
                   }
                   selectedCurrency={this.state.selectedCurrency}
                   onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
+                  searchPlaceholder={this.state.searchPlaceholder}
                 />
               </div>
             </div>
@@ -131,6 +133,7 @@ export default class MoneyInputDocs extends Component {
   numberFormatLocale={"${this.state.numberFormatLocale}"}
   numberFormatPrecision={${this.state.numberFormatPrecision}}
   onAmountChange={[a function]}
+  searchPlaceholder={"${this.state.searchPlaceholder}"}}
   onCurrencyChange={[a function]}
   disabled={${this.state.disabled}}
   size={${this.state.size ? `"${this.state.size}"` : undefined}}
@@ -243,9 +246,21 @@ export default class MoneyInputDocs extends Component {
 
               <div className="m-t-3" />
               <Checkbox
-                label="Is disabled"
+                label="Is disabled?"
                 checked={this.state.disabled}
                 onChange={() => this.setState(({ disabled }) => ({ disabled: !disabled }))}
+              />
+
+              <div className="m-t-3" />
+              <label htmlFor="money-input-search-placeholder" className="control-label">
+                Currency search placeholder
+              </label>
+              <input
+                id="money-input-search-placeholder"
+                type="text"
+                className="form-control"
+                value={this.state.searchPlaceholder}
+                onChange={event => this.setState({ searchPlaceholder: event.target.value })}
               />
             </div>
           </div>

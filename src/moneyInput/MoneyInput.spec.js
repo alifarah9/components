@@ -353,4 +353,9 @@ describe('Money Input', () => {
         .hasClass('tw-money-input__fixed-currency--disabled'),
     ).toBe(true);
   });
+
+  it('uses the passed in search placeholder', () => {
+    component.setProps({ searchPlaceholder: 'a placeholder' });
+    expect(currencySelect().prop('searchPlaceholder')).toBe('a placeholder');
+  });
 });
