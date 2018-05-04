@@ -70,6 +70,10 @@ describe('Money Input', () => {
     return component.find(Select);
   }
 
+  function fixedCurrencyDisplay() {
+    return component.find('.tw-money-input__fixed-currency');
+  }
+
   function searchCurrencies(query) {
     currencySelect().prop('onSearchChange')(query);
   }
@@ -294,5 +298,37 @@ describe('Money Input', () => {
     expect(amountInput().prop('id')).toBeUndefined();
     component.setProps({ id: 'some-id' });
     expect(amountInput().prop('id')).toBe('some-id');
+  });
+
+  it('shows fixed currency view if only one currency available and selected', () => {
+    expect(fixedCurrencyDisplay().length).toBe(0);
+    const EEK = { value: 'EEK', currency: 'EEK' };
+    component.setProps({
+      currencies: [EEK],
+      selectedCurrency: EEK,
+    });
+    expect(currencySelect().length).toBe(0);
+    expect(fixedCurrencyDisplay().length).toBe(1);
+    expect(component.find('.tw-money-input__fixed-currency span').text()).toBe('EEK');
+    expect(component.find('.currency-flag').hasClass('currency-flag-eek')).toBe(true);
+  });
+
+  it('shows fixed currency keyline and flag if large input only', () => {
+    const EEK = { value: 'EEK', currency: 'EEK' };
+    component.setProps({
+      currencies: [EEK],
+      selectedCurrency: EEK,
+      size: 'md',
+    });
+
+    ['md', 'sm'].forEach(size => {
+      component.setProps({ size });
+      expect(component.find('.tw-money-input__keyline').length).toBe(0);
+      expect(component.find('.currency-flag').length).toBe(0);
+    });
+
+    component.setProps({ size: 'lg' });
+    expect(component.find('.tw-money-input__keyline').length).toBe(1);
+    expect(component.find('.currency-flag').length).toBe(1);
   });
 });

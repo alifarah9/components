@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { MoneyInput, Select } from '../src';
+import { MoneyInput, Select, Checkbox } from '../src';
 import { formatNumber } from '../src/moneyInput/numberFormatting';
 
 const currencies = [
@@ -66,16 +66,24 @@ export default class MoneyInputDocs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCurrency: currencies[1],
+      selectedCurrency: currencies[2],
       amount: 1000,
       numberFormatLocale: 'en-GB',
       numberFormatPrecision: 2,
+      fixedCurrency: false,
       form: {
         numberFormatLocale: 'en-GB',
         numberFormatPrecision: '2',
         amount: '1000',
       },
     };
+  }
+
+  getCurrencies() {
+    if (this.state.fixedCurrency) {
+      return [this.state.selectedCurrency];
+    }
+    return currencies;
   }
 
   render() {
@@ -94,12 +102,18 @@ export default class MoneyInputDocs extends Component {
                 </label>
                 <MoneyInput
                   id="money-input"
-                  currencies={currencies}
+                  currencies={this.getCurrencies()}
                   amount={this.state.amount}
                   numberFormatLocale={this.state.numberFormatLocale}
                   numberFormatPrecision={this.state.numberFormatPrecision}
                   size={this.state.size}
-                  onAmountChange={amount => this.setState({ amount })}
+                  onAmountChange={amount =>
+                    this.setState(oldState => ({
+                      ...oldState,
+                      amount,
+                      form: { ...oldState.form, amount: amount.toString() },
+                    }))
+                  }
                   selectedCurrency={this.state.selectedCurrency}
                   onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
                 />
@@ -120,7 +134,7 @@ export default class MoneyInputDocs extends Component {
   selectedCurrency={${
     this.state.selectedCurrency ? JSON.stringify(this.state.selectedCurrency, null, '  ') : null
   }}
-  currencies={${JSON.stringify(currencies, null, '  ')}}
+  currencies={${JSON.stringify(this.getCurrencies(), null, '  ')}}
   />
 `}
               </pre>
@@ -213,6 +227,15 @@ export default class MoneyInputDocs extends Component {
                     },
                   );
                 }}
+              />
+
+              <div className="m-t-3" />
+              <Checkbox
+                label="Is fixed currency?"
+                checked={this.state.fixedCurrency}
+                onChange={() =>
+                  this.setState(({ fixedCurrency }) => ({ fixedCurrency: !fixedCurrency }))
+                }
               />
             </div>
           </div>
