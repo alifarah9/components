@@ -1,3 +1,10 @@
+# v2.1.0
+## Add money input component
+
+![image](https://user-images.githubusercontent.com/9271565/39634480-9a40aff0-4fc3-11e8-8685-f5550f6324b0.png)
+
+Also adds a "separator" element to the select component.
+
 # v2.0.1
 ## Make flow navigation more flexible
 - Hide avatar and stepper if the done prop passed is true
