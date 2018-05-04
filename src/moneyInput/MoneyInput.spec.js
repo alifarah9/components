@@ -331,4 +331,26 @@ describe('Money Input', () => {
     expect(component.find('.tw-money-input__keyline').length).toBe(1);
     expect(component.find('.currency-flag').length).toBe(1);
   });
+
+  it('can be disabled', () => {
+    const EEK = { value: 'EEK', currency: 'EEK' };
+    component.setProps({
+      currencies: [EEK],
+      selectedCurrency: EEK,
+    });
+
+    expect(amountInput().prop('disabled')).toBe(false);
+    expect(
+      component
+        .find('.tw-money-input__fixed-currency')
+        .hasClass('tw-money-input__fixed-currency--disabled'),
+    ).toBe(false);
+    component.setProps({ disabled: true });
+    expect(amountInput().prop('disabled')).toBe(true);
+    expect(
+      component
+        .find('.tw-money-input__fixed-currency')
+        .hasClass('tw-money-input__fixed-currency--disabled'),
+    ).toBe(true);
+  });
 });

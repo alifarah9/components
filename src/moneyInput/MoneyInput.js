@@ -25,6 +25,7 @@ class MoneyInput extends Component {
     onAmountChange: Types.func.isRequired,
     numberFormatLocale: Types.string,
     numberFormatPrecision: Types.number,
+    disabled: Types.bool,
   };
 
   static defaultProps = {
@@ -32,6 +33,7 @@ class MoneyInput extends Component {
     size: 'lg',
     numberFormatLocale: 'en-GB',
     numberFormatPrecision: 2,
+    disabled: false,
   };
 
   constructor(props) {
@@ -161,9 +163,14 @@ class MoneyInput extends Component {
           onChange={this.onAmountChange}
           onFocus={this.onAmountFocus}
           onBlur={this.onAmountBlur}
+          disabled={this.props.disabled}
         />
         {isFixedCurrency ? (
-          <div className={`tw-money-input__fixed-currency input-group-addon input-${size}`}>
+          <div
+            className={`tw-money-input__fixed-currency input-group-addon input-${size} ${
+              this.props.disabled ? 'tw-money-input__fixed-currency--disabled' : ''
+            }`}
+          >
             {size === 'lg'
               ? [
                 <i className="tw-money-input__keyline" key="keyline" />,

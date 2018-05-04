@@ -71,6 +71,7 @@ export default class MoneyInputDocs extends Component {
       numberFormatLocale: 'en-GB',
       numberFormatPrecision: 2,
       fixedCurrency: false,
+      disabled: false,
       form: {
         numberFormatLocale: 'en-GB',
         numberFormatPrecision: '2',
@@ -104,6 +105,7 @@ export default class MoneyInputDocs extends Component {
                   id="money-input"
                   currencies={this.getCurrencies()}
                   amount={this.state.amount}
+                  disabled={this.state.disabled}
                   numberFormatLocale={this.state.numberFormatLocale}
                   numberFormatPrecision={this.state.numberFormatPrecision}
                   size={this.state.size}
@@ -130,6 +132,7 @@ export default class MoneyInputDocs extends Component {
   numberFormatPrecision={${this.state.numberFormatPrecision}}
   onAmountChange={[a function]}
   onCurrencyChange={[a function]}
+  disabled={${this.state.disabled}}
   size={${this.state.size ? `"${this.state.size}"` : undefined}}
   selectedCurrency={${
     this.state.selectedCurrency ? JSON.stringify(this.state.selectedCurrency, null, '  ') : null
@@ -236,6 +239,13 @@ export default class MoneyInputDocs extends Component {
                 onChange={() =>
                   this.setState(({ fixedCurrency }) => ({ fixedCurrency: !fixedCurrency }))
                 }
+              />
+
+              <div className="m-t-3" />
+              <Checkbox
+                label="Is disabled"
+                checked={this.state.disabled}
+                onChange={() => this.setState(({ disabled }) => ({ disabled: !disabled }))}
               />
             </div>
           </div>
