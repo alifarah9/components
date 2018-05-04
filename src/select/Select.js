@@ -117,12 +117,12 @@ export default class Select extends Component {
         event.preventDefault();
         break;
       case KeyCodes.SPACE:
-        if (open) {
-          this.selectKeyboardFocusedOption();
-        } else {
-          this.open();
-        }
         if (event.target !== this.searchBox) {
+          if (open) {
+            this.selectKeyboardFocusedOption();
+          } else {
+            this.open();
+          }
           event.preventDefault();
         }
         break;
