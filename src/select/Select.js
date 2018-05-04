@@ -79,6 +79,7 @@ export default class Select extends Component {
   constructor(props) {
     super(props);
     this.state = { open: false, keyboardFocusedOptionIndex: null };
+    this.searchBox = null;
   }
 
   componentWillUnmount() {
@@ -121,7 +122,9 @@ export default class Select extends Component {
         } else {
           this.open();
         }
-        event.preventDefault();
+        if (event.target !== this.searchBox) {
+          event.preventDefault();
+        }
         break;
       case KeyCodes.ENTER:
         this.selectKeyboardFocusedOption();
@@ -232,6 +235,9 @@ export default class Select extends Component {
               onChange={this.handleSearchChange}
               onClick={stopPropagation}
               value={searchValue}
+              ref={el => {
+                this.searchBox = el;
+              }}
             />
           </div>
         </a>

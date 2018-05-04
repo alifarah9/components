@@ -5,6 +5,19 @@
 
 Also adds a "separator" element to the select component.
 
+# v2.0.4
+## Remove babel-preset-react-app
+- The React preset for Babel was shipped with `useBuiltIns: true` which led to broken functionality in IE
+- The caveat is bundle size increased from ~13 Kb to ~19Kb.
+
+# v2.0.3
+## Move babel config to babelrc file
+- This should allow this module to be used within a babel 7 setup by not publishing its babelrc config
+
+# v2.0.2
+## Select - search with space
+- Fix ability to type SPACE in the search box input field of Select (skip preventDefault when typing into the search field)
+
 # v2.0.1
 ## Make flow navigation more flexible
 - Hide avatar and stepper if the done prop passed is true
