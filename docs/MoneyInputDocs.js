@@ -173,9 +173,7 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.amount}
                 onChange={event => {
-                  const {
-                    target: { value: amount },
-                  } = event;
+                  const { target: { value: amount } } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, amount },
@@ -199,9 +197,7 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.numberFormatLocale}
                 onChange={event => {
-                  const {
-                    target: { value: numberFormatLocale },
-                  } = event;
+                  const { target: { value: numberFormatLocale } } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, numberFormatLocale },
@@ -227,9 +223,7 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.numberFormatPrecision}
                 onChange={event => {
-                  const {
-                    target: { value: numberFormatPrecision },
-                  } = event;
+                  const { target: { value: numberFormatPrecision } } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, numberFormatPrecision },
