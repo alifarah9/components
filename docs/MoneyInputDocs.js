@@ -181,7 +181,7 @@ export default class MoneyInputDocs extends Component {
                       form: { ...form, amount },
                     }),
                     () => {
-                      const parsed = parseInt(amount, 10);
+                      const parsed = parseFloat(amount);
                       if (!Number.isNaN(parsed)) {
                         this.setState({ amount: parsed });
                       }
