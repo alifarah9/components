@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Types from 'prop-types';
 import Select from '../select';
+import './MoneyInput.less';
 
 import { formatNumber, parseNumber } from './numberFormatting';
 
@@ -24,7 +25,9 @@ class MoneyInput extends Component {
     onAmountChange: Types.func.isRequired,
     numberFormatLocale: Types.string,
     numberFormatPrecision: Types.number,
-    addon: Types.element,
+    addon: Types.node,
+    disabled: Types.bool,
+    searchPlaceholder: Types.string,
   };
 
   static defaultProps = {
@@ -32,7 +35,9 @@ class MoneyInput extends Component {
     size: 'lg',
     numberFormatLocale: 'en-GB',
     numberFormatPrecision: 2,
-    addon: undefined,
+    addon: null,
+    disabled: false,
+    searchPlaceholder: '',
   };
 
   constructor(props) {
@@ -139,18 +144,21 @@ class MoneyInput extends Component {
   includeCurrencyInSearchResults(currency) {
     const searchQuery = this.state.searchQuery.toLowerCase();
     return (
-      currency.label &&
-      (currency.label.toLowerCase().indexOf(searchQuery) !== -1 ||
-        (currency.searchable && currency.searchable.toLowerCase().indexOf(searchQuery) !== -1) ||
-        (currency.note && currency.note.toLowerCase().indexOf(searchQuery) !== -1))
+      !searchQuery ||
+      (currency.label &&
+        (currency.label.toLowerCase().indexOf(searchQuery) !== -1 ||
+          (currency.searchable && currency.searchable.toLowerCase().indexOf(searchQuery) !== -1) ||
+          (currency.note && currency.note.toLowerCase().indexOf(searchQuery) !== -1)))
     );
   }
 
   render() {
     const { selectedCurrency, onCurrencyChange, size, addon } = this.props;
-    // TODO: amount handling
+    const selectOptions = this.getSelectOptions();
+    const isFixedCurrency =
+      selectOptions.length === 1 && selectOptions[0].currency === selectedCurrency.currency;
     return (
-      <div className={`input-group input-group-${size}`}>
+      <div className={`tw-money-input input-group input-group-${size}`}>
         <input
           id={this.props.id}
           value={this.state.formattedAmount}
@@ -159,22 +167,53 @@ class MoneyInput extends Component {
           onChange={this.onAmountChange}
           onFocus={this.onAmountFocus}
           onBlur={this.onAmountBlur}
+          disabled={this.props.disabled}
         />
-        {addon && <span className={`input-group-addon input-${size}`}>{addon}</span>}
-        <span className="input-group-btn amount-currency-select-btn">
-          <Select
-            options={this.getSelectOptions()}
-            selected={{ ...selectedCurrency, note: null }}
-            onChange={onCurrencyChange}
-            onSearchChange={searchQuery => this.setState({ searchQuery })}
-            searchValue={this.state.searchQuery}
-            size={size}
-            required
-            dropdownRight="xs"
-            dropdownWidth="lg"
-            inverse
-          />
-        </span>
+        {addon && (
+          <span
+            className={`input-group-addon input-${size} ${
+              this.props.disabled ? 'tw-money-input--disabled' : ''
+            }`}
+          >
+            {addon}
+          </span>
+        )}
+        {isFixedCurrency ? (
+          <div
+            className={`input-group-addon input-${size} tw-money-input__fixed-currency ${
+              this.props.disabled ? 'tw-money-input--disabled' : ''
+            }`}
+          >
+            {size === 'lg'
+              ? [
+                <i className="tw-money-input__keyline" key="keyline" />,
+                <i
+                  className={`currency-flag currency-flag-${selectedCurrency.currency.toLowerCase()} hidden-xs`}
+                  key="flag"
+                />,
+                ]
+              : ''}
+            <span className={size === 'lg' ? 'm-r-1' : ''}>
+              {selectedCurrency.currency.toUpperCase()}
+            </span>
+          </div>
+        ) : (
+          <span className="input-group-btn amount-currency-select-btn">
+            <Select
+              options={selectOptions}
+              selected={{ ...selectedCurrency, note: null }}
+              onChange={onCurrencyChange}
+              searchPlaceholder={this.props.searchPlaceholder}
+              onSearchChange={searchQuery => this.setState({ searchQuery })}
+              searchValue={this.state.searchQuery}
+              size={size}
+              required
+              dropdownRight="xs"
+              dropdownWidth="lg"
+              inverse
+            />
+          </span>
+        )}
       </div>
     );
   }

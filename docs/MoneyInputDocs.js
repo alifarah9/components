@@ -66,10 +66,13 @@ export default class MoneyInputDocs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCurrency: currencies[1],
+      selectedCurrency: currencies[2],
       amount: 1000,
       numberFormatLocale: 'en-GB',
       numberFormatPrecision: 2,
+      fixedCurrency: false,
+      disabled: false,
+      searchPlaceholder: 'Type a currency or country',
       form: {
         numberFormatLocale: 'en-GB',
         numberFormatPrecision: '2',
@@ -77,6 +80,13 @@ export default class MoneyInputDocs extends Component {
       },
       addonEnabled: false,
     };
+  }
+
+  getCurrencies() {
+    if (this.state.fixedCurrency) {
+      return [this.state.selectedCurrency];
+    }
+    return currencies;
   }
 
   render() {
@@ -95,15 +105,23 @@ export default class MoneyInputDocs extends Component {
                 </label>
                 <MoneyInput
                   id="money-input"
-                  currencies={currencies}
+                  currencies={this.getCurrencies()}
                   amount={this.state.amount}
+                  disabled={this.state.disabled}
                   numberFormatLocale={this.state.numberFormatLocale}
                   numberFormatPrecision={this.state.numberFormatPrecision}
                   size={this.state.size}
-                  onAmountChange={amount => this.setState({ amount })}
+                  onAmountChange={amount =>
+                    this.setState(oldState => ({
+                      ...oldState,
+                      amount,
+                      form: { ...oldState.form, amount: amount.toString() },
+                    }))
+                  }
                   selectedCurrency={this.state.selectedCurrency}
                   onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
                   addon={this.state.addonEnabled ? <i className="icon icon-unlock" /> : undefined}
+                  searchPlaceholder={this.state.searchPlaceholder}
                 />
               </div>
             </div>
@@ -117,13 +135,15 @@ export default class MoneyInputDocs extends Component {
   numberFormatLocale={"${this.state.numberFormatLocale}"}
   numberFormatPrecision={${this.state.numberFormatPrecision}}
   onAmountChange={[a function]}
+  searchPlaceholder={"${this.state.searchPlaceholder}"}}
   onCurrencyChange={[a function]}
+  disabled={${this.state.disabled}}
   size={${this.state.size ? `"${this.state.size}"` : undefined}}
-  addon={${this.state.addonEnabled ? '<i className="icon icon-unlock" />' : undefined}}
+  addon={${this.state.addonEnabled ? '<i className="icon icon-unlock" />' : null}}
   selectedCurrency={${
     this.state.selectedCurrency ? JSON.stringify(this.state.selectedCurrency, null, '  ') : null
   }}
-  currencies={${JSON.stringify(currencies, null, '  ')}}
+  currencies={${JSON.stringify(this.getCurrencies(), null, '  ')}}
   />
 `}
               </pre>
@@ -223,6 +243,7 @@ export default class MoneyInputDocs extends Component {
                   );
                 }}
               />
+
               <div className="m-t-3" />
               <Checkbox
                 label={'Addon'}
@@ -230,6 +251,34 @@ export default class MoneyInputDocs extends Component {
                 required={false}
                 disabled={false}
                 checked={this.state.addonEnabled}
+              />
+
+              <div className="m-t-3" />
+              <Checkbox
+                label="Is fixed currency?"
+                checked={this.state.fixedCurrency}
+                onChange={() =>
+                  this.setState(({ fixedCurrency }) => ({ fixedCurrency: !fixedCurrency }))
+                }
+              />
+
+              <div className="m-t-3" />
+              <Checkbox
+                label="Is disabled?"
+                checked={this.state.disabled}
+                onChange={() => this.setState(({ disabled }) => ({ disabled: !disabled }))}
+              />
+
+              <div className="m-t-3" />
+              <label htmlFor="money-input-search-placeholder" className="control-label">
+                Currency search placeholder
+              </label>
+              <input
+                id="money-input-search-placeholder"
+                type="text"
+                className="form-control"
+                value={this.state.searchPlaceholder}
+                onChange={event => this.setState({ searchPlaceholder: event.target.value })}
               />
             </div>
           </div>

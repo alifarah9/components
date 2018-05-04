@@ -70,6 +70,10 @@ describe('Money Input', () => {
     return component.find(Select);
   }
 
+  function fixedCurrencyDisplay() {
+    return component.find('.tw-money-input__fixed-currency');
+  }
+
   function searchCurrencies(query) {
     currencySelect().prop('onSearchChange')(query);
   }
@@ -310,5 +314,60 @@ describe('Money Input', () => {
         .first();
     expect(passedInAddon().prop('id')).toBe('test-addon');
     expect(passedInAddon().type()).toBe('span');
+  });
+
+  it('shows fixed currency view if only one currency available and selected', () => {
+    expect(fixedCurrencyDisplay().length).toBe(0);
+    const EEK = { value: 'EEK', currency: 'EEK' };
+    component.setProps({
+      currencies: [EEK],
+      selectedCurrency: EEK,
+    });
+    expect(currencySelect().length).toBe(0);
+    expect(fixedCurrencyDisplay().length).toBe(1);
+    expect(component.find('.tw-money-input__fixed-currency span').text()).toBe('EEK');
+    expect(component.find('.currency-flag').hasClass('currency-flag-eek')).toBe(true);
+  });
+
+  it('shows fixed currency keyline and flag if large input only', () => {
+    const EEK = { value: 'EEK', currency: 'EEK' };
+    component.setProps({
+      currencies: [EEK],
+      selectedCurrency: EEK,
+      size: 'md',
+    });
+
+    ['md', 'sm'].forEach(size => {
+      component.setProps({ size });
+      expect(component.find('.tw-money-input__keyline').length).toBe(0);
+      expect(component.find('.currency-flag').length).toBe(0);
+    });
+
+    component.setProps({ size: 'lg' });
+    expect(component.find('.tw-money-input__keyline').length).toBe(1);
+    expect(component.find('.currency-flag').length).toBe(1);
+  });
+
+  it('can be disabled', () => {
+    const EEK = { value: 'EEK', currency: 'EEK' };
+    component.setProps({
+      currencies: [EEK],
+      selectedCurrency: EEK,
+    });
+
+    expect(amountInput().prop('disabled')).toBe(false);
+    expect(
+      component.find('.tw-money-input__fixed-currency').hasClass('tw-money-input--disabled'),
+    ).toBe(false);
+    component.setProps({ disabled: true });
+    expect(amountInput().prop('disabled')).toBe(true);
+    expect(
+      component.find('.tw-money-input__fixed-currency').hasClass('tw-money-input--disabled'),
+    ).toBe(true);
+  });
+
+  it('uses the passed in search placeholder', () => {
+    component.setProps({ searchPlaceholder: 'a placeholder' });
+    expect(currencySelect().prop('searchPlaceholder')).toBe('a placeholder');
   });
 });
