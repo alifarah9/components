@@ -36,7 +36,7 @@ describe('Number formatting', () => {
   });
 
   it('parses localized numbers', () => {
-    [['1234.567', 'en-GB', 3], ['1 23 4,567', 'et-EE', 3], ['1,23,4.567', 'en-US', 3]].forEach(
+    [['1234.567', 'en-GB', 3], ['1,23,4.567', 'en-US', 3]].forEach(
       ([number, locale, precision]) => {
         expect(parseNumber(number, locale, precision)).toBe(1234.567);
       },
