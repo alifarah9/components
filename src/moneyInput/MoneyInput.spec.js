@@ -256,7 +256,7 @@ describe('Money Input', () => {
     numberFormatting.formatNumber = jest.fn(
       (num, locale, precision) => `formatted ${num}, ${locale}, ${precision}`,
     );
-    component.setProps({ amount: 123, numberFormatLocale: 'et-EE', numberFormatPrecision: 3 });
+    component.setProps({ amount: 123, locale: 'et-EE', numberFormatPrecision: 3 });
     expect(amountInput().prop('value')).toBe('formatted 123, et-EE, 3');
   });
 
@@ -264,7 +264,7 @@ describe('Money Input', () => {
     numberFormatting.formatNumber = jest.fn(
       (num, locale, precision) => `formatted ${num}, ${locale}, ${precision}`,
     );
-    component.setProps({ numberFormatLocale: 'en-US', numberFormatPrecision: 3 });
+    component.setProps({ locale: 'en-US', numberFormatPrecision: 3 });
     numberFormatting.parseNumber = jest.fn(parseFloat);
     enterAmount('123.45');
     expect(amountInput().prop('value')).toBe('123.45');
@@ -275,7 +275,7 @@ describe('Money Input', () => {
   it('parses the number you input and calls onAmountChange with it', () => {
     const onAmountChange = jest.fn();
     let assertions = 0;
-    component.setProps({ onAmountChange, numberFormatLocale: 'es-ES', numberFormatPrecision: 1 });
+    component.setProps({ onAmountChange, locale: 'es-ES', numberFormatPrecision: 1 });
     numberFormatting.parseNumber = jest.fn((amount, locale, precision) => {
       expect(amount).toBe('500.1234');
       expect(locale).toBe('es-ES');
@@ -299,7 +299,7 @@ describe('Money Input', () => {
   });
 
   it('passes the id given to the input element', () => {
-    expect(amountInput().prop('id')).toBeUndefined();
+    expect(amountInput().prop('id')).toBeNull();
     component.setProps({ id: 'some-id' });
     expect(amountInput().prop('id')).toBe('some-id');
   });
@@ -329,6 +329,12 @@ describe('Money Input', () => {
     expect(component.find('.currency-flag').hasClass('currency-flag-eek')).toBe(true);
   });
 
+  it('shows fixed currency view when no function is passed to onCurrencyChange prop', () => {
+    component.setProps({ onCurrencyChange: undefined });
+    expect(currencySelect().length).toBe(0);
+    expect(fixedCurrencyDisplay().length).toBe(1);
+  });
+
   it('shows fixed currency keyline and flag if large input only', () => {
     const EEK = { value: 'EEK', currency: 'EEK' };
     component.setProps({
@@ -348,7 +354,7 @@ describe('Money Input', () => {
     expect(component.find('.currency-flag').length).toBe(1);
   });
 
-  it('can be disabled', () => {
+  it('amount input will be disabled when there is no onAmpuntChange prop', () => {
     const EEK = { value: 'EEK', currency: 'EEK' };
     component.setProps({
       currencies: [EEK],
@@ -359,7 +365,7 @@ describe('Money Input', () => {
     expect(
       component.find('.tw-money-input__fixed-currency').hasClass('tw-money-input--disabled'),
     ).toBe(false);
-    component.setProps({ disabled: true });
+    component.setProps({ onAmountChange: undefined });
     expect(amountInput().prop('disabled')).toBe(true);
     expect(
       component.find('.tw-money-input__fixed-currency').hasClass('tw-money-input--disabled'),

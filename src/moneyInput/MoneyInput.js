@@ -19,36 +19,32 @@ class MoneyInput extends Component {
     id: Types.string,
     currencies: Types.arrayOf(Currency).isRequired,
     selectedCurrency: Currency.isRequired,
-    onCurrencyChange: Types.func.isRequired,
+    onCurrencyChange: Types.func,
     amount: Types.number.isRequired,
     size: Types.oneOf(['sm', 'md', 'lg']),
-    onAmountChange: Types.func.isRequired,
-    numberFormatLocale: Types.string,
+    onAmountChange: Types.func,
+    locale: Types.string,
     numberFormatPrecision: Types.number,
     addon: Types.node,
-    disabled: Types.bool,
     searchPlaceholder: Types.string,
   };
 
   static defaultProps = {
-    id: undefined,
+    id: null,
     size: 'lg',
-    numberFormatLocale: 'en-GB',
+    locale: 'en-GB',
     numberFormatPrecision: 2,
     addon: null,
-    disabled: false,
     searchPlaceholder: '',
+    onCurrencyChange: null,
+    onAmountChange: null,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       searchQuery: '',
-      formattedAmount: formatNumber(
-        props.amount,
-        props.numberFormatLocale,
-        props.numberFormatPrecision,
-      ),
+      formattedAmount: formatNumber(props.amount, props.locale, props.numberFormatPrecision),
       amountFocused: false,
     };
   }
@@ -58,7 +54,7 @@ class MoneyInput extends Component {
       this.setState({
         formattedAmount: formatNumber(
           nextProps.amount,
-          nextProps.numberFormatLocale,
+          nextProps.locale,
           nextProps.numberFormatPrecision,
         ),
       });
@@ -70,11 +66,7 @@ class MoneyInput extends Component {
     this.setState({
       formattedAmount: value,
     });
-    const parsed = parseNumber(
-      value,
-      this.props.numberFormatLocale,
-      this.props.numberFormatPrecision,
-    );
+    const parsed = parseNumber(value, this.props.locale, this.props.numberFormatPrecision);
     if (!Number.isNaN(parsed)) {
       this.props.onAmountChange(parsed);
     }
@@ -123,7 +115,7 @@ class MoneyInput extends Component {
     this.setState(previousState => {
       const parsed = parseNumber(
         previousState.formattedAmount,
-        this.props.numberFormatLocale,
+        this.props.locale,
         this.props.numberFormatPrecision,
       );
       if (Number.isNaN(parsed)) {
@@ -132,11 +124,7 @@ class MoneyInput extends Component {
         };
       }
       return {
-        formattedAmount: formatNumber(
-          parsed,
-          this.props.numberFormatLocale,
-          this.props.numberFormatPrecision,
-        ),
+        formattedAmount: formatNumber(parsed, this.props.locale, this.props.numberFormatPrecision),
       };
     });
   }
@@ -156,7 +144,9 @@ class MoneyInput extends Component {
     const { selectedCurrency, onCurrencyChange, size, addon } = this.props;
     const selectOptions = this.getSelectOptions();
     const isFixedCurrency =
-      selectOptions.length === 1 && selectOptions[0].currency === selectedCurrency.currency;
+      (selectOptions.length === 1 && selectOptions[0].currency === selectedCurrency.currency) ||
+      !onCurrencyChange;
+    const disabled = !this.props.onAmountChange;
     return (
       <div className={`tw-money-input input-group input-group-${size}`}>
         <input
@@ -167,12 +157,12 @@ class MoneyInput extends Component {
           onChange={this.onAmountChange}
           onFocus={this.onAmountFocus}
           onBlur={this.onAmountBlur}
-          disabled={this.props.disabled}
+          disabled={disabled}
         />
         {addon && (
           <span
             className={`input-group-addon input-${size} ${
-              this.props.disabled ? 'tw-money-input--disabled' : ''
+              disabled ? 'tw-money-input--disabled' : ''
             }`}
           >
             {addon}
@@ -181,7 +171,7 @@ class MoneyInput extends Component {
         {isFixedCurrency ? (
           <div
             className={`input-group-addon input-${size} tw-money-input__fixed-currency ${
-              this.props.disabled ? 'tw-money-input--disabled' : ''
+              disabled ? 'tw-money-input--disabled' : ''
             }`}
           >
             {size === 'lg'

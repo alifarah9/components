@@ -68,17 +68,18 @@ export default class MoneyInputDocs extends Component {
     this.state = {
       selectedCurrency: currencies[2],
       amount: 1000,
-      numberFormatLocale: 'en-GB',
+      locale: 'en-GB',
       numberFormatPrecision: 2,
       fixedCurrency: false,
       disabled: false,
       searchPlaceholder: 'Type a currency or country',
       form: {
-        numberFormatLocale: 'en-GB',
+        locale: 'en-GB',
         numberFormatPrecision: '2',
         amount: '1000',
       },
       addonEnabled: false,
+      amountChangeEnabled: true,
     };
   }
 
@@ -107,16 +108,18 @@ export default class MoneyInputDocs extends Component {
                   id="money-input"
                   currencies={this.getCurrencies()}
                   amount={this.state.amount}
-                  disabled={this.state.disabled}
-                  numberFormatLocale={this.state.numberFormatLocale}
+                  locale={this.state.locale}
                   numberFormatPrecision={this.state.numberFormatPrecision}
                   size={this.state.size}
-                  onAmountChange={amount =>
-                    this.setState(oldState => ({
-                      ...oldState,
-                      amount,
-                      form: { ...oldState.form, amount: amount.toString() },
-                    }))
+                  onAmountChange={
+                    this.state.amountChangeEnabled
+                      ? amount =>
+                          this.setState(oldState => ({
+                            ...oldState,
+                            amount,
+                            form: { ...oldState.form, amount: amount.toString() },
+                          }))
+                      : undefined
                   }
                   selectedCurrency={this.state.selectedCurrency}
                   onCurrencyChange={selectedCurrency => this.setState({ selectedCurrency })}
@@ -132,12 +135,11 @@ export default class MoneyInputDocs extends Component {
               <pre className="tw-docs-code">
                 {`<MoneyInput
   amount={${this.state.amount}}
-  numberFormatLocale={"${this.state.numberFormatLocale}"}
+  locale={"${this.state.locale}"}
   numberFormatPrecision={${this.state.numberFormatPrecision}}
-  onAmountChange={[a function]}
+  onAmountChange={${this.state.amountChangeEnabled ? '[a function]' : undefined}}
   searchPlaceholder={"${this.state.searchPlaceholder}"}}
   onCurrencyChange={[a function]}
-  disabled={${this.state.disabled}}
   size={${this.state.size ? `"${this.state.size}"` : undefined}}
   addon={${this.state.addonEnabled ? '<i className="icon icon-unlock" />' : null}}
   selectedCurrency={${
@@ -173,7 +175,9 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.amount}
                 onChange={event => {
-                  const { target: { value: amount } } = event;
+                  const {
+                    target: { value: amount },
+                  } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, amount },
@@ -195,16 +199,18 @@ export default class MoneyInputDocs extends Component {
                 id="money-input-number-format-locale-selector"
                 type="text"
                 className="form-control"
-                value={this.state.form.numberFormatLocale}
+                value={this.state.form.locale}
                 onChange={event => {
-                  const { target: { value: numberFormatLocale } } = event;
+                  const {
+                    target: { value: locale },
+                  } = event;
                   this.setState(
                     ({ form }) => ({
-                      form: { ...form, numberFormatLocale },
+                      form: { ...form, locale },
                     }),
                     () => {
-                      if (formattingWorksWithLocale(numberFormatLocale)) {
-                        this.setState({ numberFormatLocale });
+                      if (formattingWorksWithLocale(locale)) {
+                        this.setState({ locale });
                       }
                     },
                   );
@@ -223,7 +229,9 @@ export default class MoneyInputDocs extends Component {
                 className="form-control"
                 value={this.state.form.numberFormatPrecision}
                 onChange={event => {
-                  const { target: { value: numberFormatPrecision } } = event;
+                  const {
+                    target: { value: numberFormatPrecision },
+                  } = event;
                   this.setState(
                     ({ form }) => ({
                       form: { ...form, numberFormatPrecision },
@@ -258,9 +266,11 @@ export default class MoneyInputDocs extends Component {
 
               <div className="m-t-3" />
               <Checkbox
-                label="Is disabled?"
-                checked={this.state.disabled}
-                onChange={() => this.setState(({ disabled }) => ({ disabled: !disabled }))}
+                label="Disabled"
+                checked={!this.state.amountChangeEnabled}
+                onChange={() =>
+                  this.setState({ amountChangeEnabled: !this.state.amountChangeEnabled })
+                }
               />
 
               <div className="m-t-3" />
