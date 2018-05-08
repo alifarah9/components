@@ -188,7 +188,7 @@ class MoneyInput extends Component {
               ? [
                 <i className="tw-money-input__keyline" key="keyline" />,
                 <i
-                  className={`currency-flag currency-flag-${selectedCurrency.currency.toLowerCase()} hidden-xs`}
+                  className={`currency-flag currency-flag-${selectedCurrency.currency.toLowerCase()} hidden-xs m-r-2`}
                   key="flag"
                 />,
                 ]
