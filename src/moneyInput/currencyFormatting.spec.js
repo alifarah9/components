@@ -1,4 +1,4 @@
-import { formatNumber, parseNumber } from './numberFormatting';
+import { formatCurrency, parseCurrency } from './currencyFormatting';
 
 describe('Number formatting', () => {
   const fakeNumber = {
@@ -12,11 +12,11 @@ describe('Number formatting', () => {
   };
 
   it('uses toLocaleString to format if it is supported', () => {
-    expect(formatNumber(fakeNumber, 'et-EE', 4)).toBe(
-      'formatted for et-EE and options {"minimumFractionDigits":4,"maximumFractionDigits":4}',
+    expect(formatCurrency(fakeNumber, 'et-EE', 'eur')).toBe(
+      'formatted for et-EE and options {"minimumFractionDigits":2,"maximumFractionDigits":2}',
     );
 
-    expect(formatNumber(1234.56, 'en-GB', 3)).toBe('1,234.560'); // sanity check
+    expect(formatCurrency(1234.5, 'en-GB', 'gbp')).toBe('1,234.50'); // sanity check
   });
 
   it('uses toFixed to format if localeString not supported or acts weirdly', () => {
@@ -24,22 +24,24 @@ describe('Number formatting', () => {
     // eslint-disable-next-line no-extend-native
     Number.prototype.toLocaleString = null;
 
-    expect(formatNumber(fakeNumber, 'en-GB', 5)).toBe('fixed for precision 5');
+    expect(formatCurrency(fakeNumber, 'en-GB', 'jpy')).toBe('fixed for precision 0');
 
     // eslint-disable-next-line no-extend-native
     Number.prototype.toLocaleString = () => 'some weird value';
 
-    expect(formatNumber(1234.56, 'en-GB', 3)).toBe('1234.560'); // sanity check
+    expect(formatCurrency(1234.56, 'en-GB', 'eur')).toBe('1234.56'); // sanity check
 
     // eslint-disable-next-line no-extend-native
     Number.prototype.toLocaleString = toLocaleString;
   });
 
   it('parses localized numbers', () => {
-    [['1234.567', 'en-GB', 3], ['1,23,4.567', 'en-US', 3]].forEach(
-      ([number, locale, precision]) => {
-        expect(parseNumber(number, locale, precision)).toBe(1234.567);
-      },
-    );
+    [['1234.56', 'en-GB'], ['1,23,4.56', 'en-US']].forEach(([number, locale]) => {
+      expect(parseCurrency(number, locale, 'gbp')).toBe(1234.56);
+    });
+  });
+
+  it('has a precision fallback for unknown currencies', () => {
+    expect(formatCurrency(123.4, 'en-GB', 'not existent')).toBe('123.40');
   });
 });

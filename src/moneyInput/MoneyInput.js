@@ -3,7 +3,7 @@ import Types from 'prop-types';
 import Select from '../select';
 import './MoneyInput.less';
 
-import { formatNumber, parseNumber } from './numberFormatting';
+import { formatCurrency, parseCurrency } from './currencyFormatting';
 
 const Currency = Types.shape({
   header: Types.string,
@@ -24,7 +24,6 @@ class MoneyInput extends Component {
     size: Types.oneOf(['sm', 'md', 'lg']),
     onAmountChange: Types.func,
     locale: Types.string,
-    numberFormatPrecision: Types.number,
     addon: Types.node,
     searchPlaceholder: Types.string,
   };
@@ -33,7 +32,6 @@ class MoneyInput extends Component {
     id: null,
     size: 'lg',
     locale: 'en-GB',
-    numberFormatPrecision: 2,
     addon: null,
     searchPlaceholder: '',
     onCurrencyChange: null,
@@ -44,7 +42,7 @@ class MoneyInput extends Component {
     super(props);
     this.state = {
       searchQuery: '',
-      formattedAmount: formatNumber(props.amount, props.locale, props.numberFormatPrecision),
+      formattedAmount: formatCurrency(props.amount, props.locale, props.selectedCurrency.currency),
       amountFocused: false,
     };
   }
@@ -52,10 +50,10 @@ class MoneyInput extends Component {
   componentWillReceiveProps(nextProps) {
     if (!this.amountFocused) {
       this.setState({
-        formattedAmount: formatNumber(
+        formattedAmount: formatCurrency(
           nextProps.amount,
           nextProps.locale,
-          nextProps.numberFormatPrecision,
+          nextProps.selectedCurrency.currency,
         ),
       });
     }
@@ -66,7 +64,7 @@ class MoneyInput extends Component {
     this.setState({
       formattedAmount: value,
     });
-    const parsed = parseNumber(value, this.props.locale, this.props.numberFormatPrecision);
+    const parsed = parseCurrency(value, this.props.locale, this.props.selectedCurrency.currency);
     if (!Number.isNaN(parsed)) {
       this.props.onAmountChange(parsed);
     }
@@ -113,10 +111,10 @@ class MoneyInput extends Component {
 
   formatAmount() {
     this.setState(previousState => {
-      const parsed = parseNumber(
+      const parsed = parseCurrency(
         previousState.formattedAmount,
         this.props.locale,
-        this.props.numberFormatPrecision,
+        this.props.selectedCurrency.currency,
       );
       if (Number.isNaN(parsed)) {
         return {
@@ -124,7 +122,11 @@ class MoneyInput extends Component {
         };
       }
       return {
-        formattedAmount: formatNumber(parsed, this.props.locale, this.props.numberFormatPrecision),
+        formattedAmount: formatCurrency(
+          parsed,
+          this.props.locale,
+          this.props.selectedCurrency.currency,
+        ),
       };
     });
   }
