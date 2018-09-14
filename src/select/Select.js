@@ -127,11 +127,7 @@ export default class Select extends Component {
         }
         break;
       case KeyCodes.ENTER:
-        if (open) {
-          this.selectKeyboardFocusedOption();
-        } else {
-          this.open();
-        }
+        this.selectKeyboardFocusedOption();
         event.preventDefault();
         break;
       case KeyCodes.ESCAPE:

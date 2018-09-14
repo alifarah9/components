@@ -95,11 +95,6 @@ describe('Select', () => {
     expectDropdownToBe().open();
   });
 
-  it('can be opened by ENTER', () => {
-    component.simulate('keyDown', fakeKeyDownEventForKey(KEY_CODES.ENTER));
-    expectDropdownToBe().open();
-  });
-
   it('can be closed by clicking somewhere else', () => {
     openSelect();
     clickOnDocument();
