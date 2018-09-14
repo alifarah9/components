@@ -70,6 +70,13 @@ describe('Popover', () => {
     expect(popoverIsOpen()).toBe(true);
   });
 
+  it('closes on blur', () => {
+    clickPopoverTrigger();
+    expect(popoverIsOpen()).toBe(true);
+    blurPopoverTrigger();
+    expect(popoverIsOpen()).toBe(false);
+  });
+
   it('closes on outside click when open', () => {
     component = mount(
       <Popover content="Some content.">
@@ -179,6 +186,10 @@ describe('Popover', () => {
 
   function focusPopoverTrigger() {
     trigger().simulate('focus');
+  }
+
+  function blurPopoverTrigger() {
+    trigger().simulate('blur');
   }
 
   function clickOutsideOfPopover() {

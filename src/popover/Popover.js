@@ -57,6 +57,7 @@ export default class Popover extends Component {
       tabIndex: 0,
       onClick: this.open,
       onFocus: this.open,
+      onBlur: this.close,
     });
   };
 
