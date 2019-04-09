@@ -1,8 +1,8 @@
 {
-  "main.css": "static/css/main.baf9bfbc.css",
-  "main.css.map": "static/css/main.baf9bfbc.css.map",
-  "main.js": "static/js/main.baf9bfbc.js",
-  "main.js.map": "static/js/main.baf9bfbc.js.map",
+  "main.css": "static/css/main.d75ab7e6.css",
+  "main.css.map": "static/css/main.d75ab7e6.css.map",
+  "main.js": "static/js/main.d75ab7e6.js",
+  "main.js.map": "static/js/main.d75ab7e6.js.map",
   "static/media/CHANGELOG.md": "static/media/CHANGELOG.96257c56.md",
   "static/media/TW-Averta-Bold.eot": "static/media/TW-Averta-Bold.322faf3b.eot",
   "static/media/TW-Averta-Bold.ttf": "static/media/TW-Averta-Bold.227bddcf.ttf",
@@ -24,5 +24,6 @@
   "static/media/glyphicons-halflings-regular.svg": "static/media/glyphicons-halflings-regular.89889688.svg",
   "static/media/glyphicons-halflings-regular.ttf": "static/media/glyphicons-halflings-regular.e18bbf61.ttf",
   "static/media/glyphicons-halflings-regular.woff": "static/media/glyphicons-halflings-regular.fa277232.woff",
-  "static/media/glyphicons-halflings-regular.woff2": "static/media/glyphicons-halflings-regular.448c34a5.woff2"
+  "static/media/glyphicons-halflings-regular.woff2": "static/media/glyphicons-halflings-regular.448c34a5.woff2",
+  "static/media/logo_full_inverse.svg": "static/media/logo_full_inverse.c2d8dd61.svg"
 }
