@@ -23,6 +23,7 @@ import InstructionListDocs from './InstructionListDocs';
 import ProcessIndicatorDocs from './ProcessIndicatorDocs';
 import DefinitionListDocs from './DefinitionListDocs';
 import UploadDocs from './UploadDocs';
+import JsonSchemaFormDocs from './JsonSchemaFormDocs';
 
 const Docs = () => (
   <Fragment>
@@ -48,6 +49,7 @@ const Docs = () => (
     <ProcessIndicatorDocs />
     <DefinitionListDocs />
     <UploadDocs />
+    <JsonSchemaFormDocs />
   </Fragment>
 );
 
