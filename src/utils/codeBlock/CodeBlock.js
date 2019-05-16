@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
 import Types from 'prop-types';
+import Prism from 'prismjs';
+
+Prism.highlightAll();
 
 class CodeBlock extends PureComponent {
   static propTypes = {
