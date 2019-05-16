@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Select, Checkbox } from '..';
 import { ButtonSize, ButtonState, ButtonType } from './Button';
+import { CodeBlock } from '../utils';
 
 export default class ButtonDocs extends Component {
   state = {
@@ -41,16 +42,17 @@ export default class ButtonDocs extends Component {
           </div>
           <div className="row">
             <div className="col-md-6">
-              <pre className="tw-docs-code">
-                {`<Button
-  label={"${label}"}
-  size={"${size}"}
-  type={"${type}"}
-  state={"${stateSelection.value}"}
-  block={${block}}
-  onClick={this.handleClick}
-/>`}
-              </pre>
+              <CodeBlock lang="jsx">
+                {`
+                <Button
+                  label={"${label}"}
+                  size={"${size}"}
+                  type={"${type}"}
+                  state={"${stateSelection.value}"}
+                  block={${block}}
+                  onClick={this.handleClick}
+                />`}
+              </CodeBlock>
             </div>
             <div className="col-md-6">
               <label htmlFor="button-label-input" className="control-label">
