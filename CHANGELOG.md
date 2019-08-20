@@ -1,3 +1,7 @@
+# v11.0.4
+## flowNavigation hover label renders jsx not strings->html
+flowNavigation hover label prefers jsx over a string being evaluated to html
+
 # v11.0.3
 ## Import single function lodash packages instead of whole package
 Importing the whole `lodash` package had a side effect of attaching itself as `_` on global context (`window`).
