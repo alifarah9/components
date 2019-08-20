@@ -1,6 +1,9 @@
-# v11.0.4
+# v11.1.1
 ## flowNavigation hover label renders jsx not strings->html
 flowNavigation hover label prefers jsx over a string being evaluated to html
+
+# v11.1.0
+## Add disabled property to options in Select component
 
 # v11.0.3
 ## Import single function lodash packages instead of whole package
