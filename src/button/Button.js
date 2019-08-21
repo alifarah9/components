@@ -4,35 +4,35 @@ import classNames from 'classnames';
 import './Button.less';
 
 const Type = {
-  Primary: 'primary',
-  Pay: 'pay',
-  Secondary: 'secondary',
-  Danger: 'danger',
+  PRIMARY: 'primary',
+  PAY: 'pay',
+  SECONDARY: 'secondary',
+  DANGER: 'danger',
 };
 
 const Size = {
-  ExtraSmall: 'xs',
-  Small: 'sm',
-  Medium: 'md',
-  Large: 'lg',
+  EXTRASMALL: 'xs',
+  SMALL: 'sm',
+  MEDIUM: 'md',
+  LARGE: 'lg',
 };
 
 const State = {
-  Default: 'default',
-  Loading: 'loading',
-  Disabled: 'disabled',
+  DEFAULT: 'default',
+  LOADING: 'loading',
+  DISABLED: 'disabled',
 };
 
 const Button = ({ label, state, size, type, block, onClick }) => {
-  const isDisabled = state === State.Disabled;
-  const isLoading = state === State.Loading;
+  const isDisabled = state === State.DISABLED;
+  const isLoading = state === State.LOADING;
 
   const classes = classNames(`btn btn-${size}`, {
     'btn-loading': isLoading,
-    'btn-primary': type === Type.Primary,
-    'btn-success': type === Type.Pay,
-    'btn-default': type === Type.Secondary,
-    'btn-danger': type === Type.Danger,
+    'btn-primary': type === Type.PRIMARY,
+    'btn-success': type === Type.PAY,
+    'btn-default': type === Type.SECONDARY,
+    'btn-danger': type === Type.DANGER,
     'btn-block': block,
   });
 
@@ -41,7 +41,7 @@ const Button = ({ label, state, size, type, block, onClick }) => {
       type="button"
       className={classes}
       onClick={e => onClick(e)}
-      disabled={isDisabled || state === State.Loading}
+      disabled={isDisabled || state === State.LOADING}
     >
       {label}
       {isLoading && <span className={classNames('btn-loader', { 'm-l-2': !block })} />}
@@ -63,9 +63,9 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-  size: Button.Size.Medium,
-  type: Button.Type.Primary,
-  state: Button.State.Default,
+  size: Button.Size.MEDIUM,
+  type: Button.Type.PRIMARY,
+  state: Button.State.DEFAULT,
   block: false,
 };
 
