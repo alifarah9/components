@@ -1,3 +1,6 @@
+# v12.8.0
+## Make the button component more flexible
+
 # v12.7.1
 ## Add htmlType attribute to Button for changing the default behavior type
 
