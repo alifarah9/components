@@ -11,7 +11,8 @@ import classNames from 'classnames';
 import KeyCodes from '../common/keyCodes';
 import TypeaheadInput from './typeaheadInput/TypeaheadInput';
 import TypeaheadOption from './typeaheadOption/TypeaheadOption';
-import { Alert, Chip } from '../';
+import Alert from '../alert';
+import Chip from '../chip';
 import {
   addClickClassToDocumentOnIos,
   removeClickClassFromDocumentOnIos,
