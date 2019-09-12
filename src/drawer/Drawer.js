@@ -5,7 +5,7 @@ import '@transferwise/neptune-css/dist/css/drawer.css';
 import Close from '@transferwise/icons/react/close';
 import SlidingPanel from '../slidingPanel';
 import Dimmer from '../dimmer';
-import './Drawer.less';
+import './Drawer.css';
 
 import KEY_CODES from '../common/keyCodes';
 

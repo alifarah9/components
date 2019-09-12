@@ -20,7 +20,7 @@ import {
 
 import { AlertType } from '../alert/Alert';
 
-import './Typeahead.less';
+import './Typeahead.css';
 import { Sizes } from '../common';
 
 const DEFAULT_MIN_QUERY_LENGTH = 3;

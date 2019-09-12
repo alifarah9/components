@@ -14,7 +14,7 @@ import Upload from '../upload';
 import { Sizes } from '../common';
 import { MonthFormat } from '../common/dateUtils';
 
-import './FormControl.less';
+import './FormControl.css';
 
 const ACCEPTED_FORMAT = ['*', 'image/*', 'application/*'];
 
