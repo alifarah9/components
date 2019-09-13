@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-const Tab = ({ children, id, disabled, panelId, selected, ...attributes }) => {
+const Tab = ({ children, id, disabled, panelId, selected, handleKeyDown, ...attributes }) => {
   const node = useRef(null);
 
   const checkFocus = () => {
@@ -28,7 +28,8 @@ const Tab = ({ children, id, disabled, panelId, selected, ...attributes }) => {
       aria-selected={selected ? 'true' : 'false'}
       aria-disabled={disabled ? 'true' : 'false'}
       aria-controls={panelId}
-      tabIndex={selected ? '0' : null}
+      tabIndex="0"
+      onKeyDown={handleKeyDown}
     >
       {children}
     </li>
@@ -46,6 +47,7 @@ Tab.propTypes = {
   selected: PropTypes.bool,
   id: PropTypes.string.isRequired,
   panelId: PropTypes.string.isRequired,
+  handleKeyDown: PropTypes.func.isRequired,
 };
 
 export default Tab;
