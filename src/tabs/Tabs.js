@@ -11,7 +11,7 @@ import './Tabs.less';
 
 const MIN_SWIPE_DISTANCE = 50;
 
-const Tabs = ({ tabs, selected, onTabSelect, name }) => {
+const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [start, setStart] = useState();
   const handleTabSelect = index => () => {
     onTabSelect(index);
@@ -44,7 +44,10 @@ const Tabs = ({ tabs, selected, onTabSelect, name }) => {
   };
 
   return (
-    <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div
+      onTouchStart={changeTabOnSwipe && handleTouchStart}
+      onTouchEnd={changeTabOnSwipe && handleTouchEnd}
+    >
       <TabList>
         {tabs.map(({ title }, index) => (
           <Tab
@@ -93,6 +96,11 @@ Tabs.propTypes = {
   selected: PropTypes.number.isRequired,
   onTabSelect: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
+  changeTabOnSwipe: PropTypes.bool,
+};
+
+Tabs.defaultProps = {
+  changeTabOnSwipe: true,
 };
 
 export default Tabs;
