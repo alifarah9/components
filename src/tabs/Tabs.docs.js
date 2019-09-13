@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import Tab from './Tab';
-import TabList from './TabList';
-import TabPanel from './TabPanel';
+import Tabs from './Tabs';
 
 const TabsDocs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -21,6 +19,10 @@ const TabsDocs = () => {
     },
   ];
 
+  const handleTabSelect = index => {
+    setSelectedTab(index);
+  };
+
   return (
     <div className="container">
       <section className="section">
@@ -30,31 +32,12 @@ const TabsDocs = () => {
             <p>Wat is tab</p>
           </div>
           <div className="col-md-6 m-t-2">
-            <TabList>
-              {tabz.map(({ title }, index) => (
-                <Tab
-                  key={title}
-                  id={`docs-tab-${index}`}
-                  panelId={`docs-panel-${index}`}
-                  selected={selectedTab === index}
-                  onClick={() => {
-                    setSelectedTab(index);
-                  }}
-                >
-                  {title}
-                </Tab>
-              ))}
-            </TabList>
-            {tabz.map(({ content }, index) => (
-              <TabPanel
-                key={tabz[index].title}
-                tabId={`docs-tab-${index}`}
-                id={`docs-panel-${index}`}
-                selected={selectedTab === index}
-              >
-                {content}
-              </TabPanel>
-            ))}
+            <Tabs
+              name="tabs-docs"
+              tabz={tabz}
+              selected={selectedTab}
+              onTabSelect={handleTabSelect}
+            />
           </div>
         </div>
       </section>
