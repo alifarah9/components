@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import CSSTransition from 'react-transition-group/CSSTransition';
+
 import Tab from './Tab';
 import TabList from './TabList';
 import TabPanel from './TabPanel';
 import KeyCodes from '../common/keyCodes';
 
 import './Tabs.less';
+
+const MIN_SWIPE_DISTANCE = 50;
 
 const Tabs = ({ tabs, selected, onTabSelect, name }) => {
   const [start, setStart] = useState();
@@ -24,15 +28,17 @@ const Tabs = ({ tabs, selected, onTabSelect, name }) => {
     event.persist();
   };
 
+  const userSwiped = difference => Math.abs(difference) > MIN_SWIPE_DISTANCE;
+
   const handleTouchEnd = event => {
     const end = event.nativeEvent.changedTouches[0].clientX;
 
     event.persist();
 
     // todo: cleanup
-    if (end > start && end - start > 50 && selected > 0) {
+    if (end > start && userSwiped(end - start) && selected > 0) {
       onTabSelect(selected - 1);
-    } else if (start > end && start - end > 50 && selected < tabs.length - 1) {
+    } else if (start > end && userSwiped(start - end) && selected < tabs.length - 1) {
       onTabSelect(selected + 1);
     }
   };
@@ -54,14 +60,24 @@ const Tabs = ({ tabs, selected, onTabSelect, name }) => {
         ))}
       </TabList>
       {tabs.map(({ content }, index) => (
-        <TabPanel
-          key={tabs[index].title}
-          tabId={`${name}-tab-${index}`}
-          id={`${name}-panel-${index}`}
-          selected={selected === index}
+        <CSSTransition
+          in={index === selected}
+          timeout={{
+            appear: 2000,
+            enter: 2000,
+            exit: 2000,
+          }}
+          unmountOnExit
         >
-          {content}
-        </TabPanel>
+          <TabPanel
+            key={tabs[index].title}
+            tabId={`${name}-tab-${index}`}
+            id={`${name}-panel-${index}`}
+            selected={selected === index}
+          >
+            {content}
+          </TabPanel>
+        </CSSTransition>
       ))}
     </div>
   );

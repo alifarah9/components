@@ -23,9 +23,23 @@
   }
 
   &__panel {
+    transition: opacity 300ms;
+
     &--selected {
       padding: @spacer;
       border: 1px solid @brand-navy;
+    }
+
+    &.enter {
+      opacity: 0;
+    }
+
+    &.enter-active {
+      opacity: 1;
+    }
+
+    &.exit {
+      opacity: 0;
     }
   }
 }
