@@ -34,7 +34,7 @@ const TabsDocs = () => {
           <div className="col-md-6 m-t-2">
             <Tabs
               name="tabs-docs"
-              tabz={tabz}
+              tabs={tabz}
               selected={selectedTab}
               onTabSelect={handleTabSelect}
             />

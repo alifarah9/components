@@ -1,0 +1,31 @@
+@import '~bootstrap/less/variables.less';
+@import '~@transferwise/neptune-css/src/less/variables/_colors.less';
+
+.tabs {
+  &__tab {
+    display: inline-block;
+    padding: @spacer;
+
+    &--selected {
+      background-color: @brand-navy;
+      color: #fff;
+    }
+
+    &--disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__tab-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__panel {
+    &--selected {
+      padding: @spacer;
+      border: 1px solid @brand-navy;
+    }
+  }
+}
