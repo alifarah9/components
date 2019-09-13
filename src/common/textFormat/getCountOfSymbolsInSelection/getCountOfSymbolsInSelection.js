@@ -1,4 +1,4 @@
-import  getSymbolsInPatternWithPosition  from '../getSymbolsInPatternWithPosition';
+import getSymbolsInPatternWithPosition from '../getSymbolsInPatternWithPosition';
 
 const getCountOfSymbolsInSelection = (selectionStart, selectionEnd, pattern) =>
   getSymbolsInPatternWithPosition(pattern).filter(

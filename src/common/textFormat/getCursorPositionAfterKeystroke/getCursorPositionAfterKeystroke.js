@@ -1,4 +1,4 @@
-import { getDistanceToNextSymbol,getDistanceToPreviousSymbol } from '../getDistanceToSymbol';
+import { getDistanceToNextSymbol, getDistanceToPreviousSymbol } from '../getDistanceToSymbol';
 import getCountOfSymbolsInSelection from '../getCountOfSymbolsInSelection';
 
 const getCursorPositionAfteractionstroke = (
