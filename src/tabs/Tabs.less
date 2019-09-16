@@ -22,8 +22,21 @@
     margin: 0;
   }
 
+  &__panel-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &__slider {
+    display: flex;
+
+    &.is-animating {
+      transition: transform 300ms;
+    }
+  }
+
   &__panel {
-    transition: opacity 300ms;
+    flex: 1;
 
     &--selected {
       padding: @spacer;
