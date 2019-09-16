@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import CSSTransition from 'react-transition-group/CSSTransition';
+import classnames from 'classnames';
 
 import Tab from './Tab';
 import TabList from './TabList';
@@ -12,19 +12,33 @@ import './Tabs.less';
 const MIN_SWIPE_DISTANCE = 50;
 
 const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
+  const tabsLength = tabs.length;
   const [start, setStart] = useState();
-  const handleTabSelect = index => () => {
+  const [translateX, setTranslateX] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleTabSelect = index => {
+    if (index > selected) {
+      // TODO: next tab
+    } else if (index < selected) {
+      // TODO: prev tab
+    }
     onTabSelect(index);
+  };
+
+  const handleTabClick = index => () => {
+    handleTabSelect(index);
   };
 
   const handleKeyDown = index => event => {
     if (event && event.keyCode === KeyCodes.ENTER) {
-      onTabSelect(index);
+      handleTabSelect(index);
     }
   };
 
   const handleTouchStart = event => {
     setStart(event.nativeEvent.touches[0].clientX);
+
     event.persist();
   };
 
@@ -32,14 +46,36 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
   const handleTouchEnd = event => {
     const end = event.nativeEvent.changedTouches[0].clientX;
+    let nextSelected = selected;
+
+    setIsAnimating(true);
 
     event.persist();
 
     // todo: cleanup
     if (end > start && userSwiped(end - start) && selected > 0) {
-      onTabSelect(selected - 1);
-    } else if (start > end && userSwiped(start - end) && selected < tabs.length - 1) {
-      onTabSelect(selected + 1);
+      handleTabSelect(selected - 1);
+      nextSelected -= 1;
+    } else if (start > end && userSwiped(start - end) && selected < tabsLength - 1) {
+      handleTabSelect(selected + 1);
+      nextSelected += 1;
+    }
+
+    setTranslateX(`${-(100 / tabsLength) * nextSelected}%`);
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1000);
+  };
+
+  const handleTouchMove = event => {
+    const current = event.nativeEvent.changedTouches[0].clientX;
+
+    event.persist();
+
+    if (current > start) {
+      setTranslateX(`${current - start}px`);
+    } else if (start > current) {
+      setTranslateX(`-${start - current}px`);
     }
   };
 
@@ -47,6 +83,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     <div
       onTouchStart={changeTabOnSwipe && handleTouchStart}
       onTouchEnd={changeTabOnSwipe && handleTouchEnd}
+      onTouchMove={changeTabOnSwipe && handleTouchMove}
     >
       <TabList>
         {tabs.map(({ title }, index) => (
@@ -55,33 +92,32 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
             id={`${name}-tab-${index}`}
             panelId={`${name}-panel-${index}`}
             selected={selected === index}
-            onClick={handleTabSelect(index)}
+            onClick={handleTabClick(index)}
             handleKeyDown={handleKeyDown(index)}
           >
             {title}
           </Tab>
         ))}
       </TabList>
-      {tabs.map(({ content }, index) => (
-        <CSSTransition
-          in={index === selected}
-          timeout={{
-            appear: 2000,
-            enter: 2000,
-            exit: 2000,
+      <div className="tabs__panel-container">
+        <div
+          className={classnames('tabs__slider', { 'is-animating': isAnimating })}
+          style={{
+            width: `${tabsLength * 100}%`,
+            transform: `translateX(${translateX})`,
           }}
-          unmountOnExit
         >
-          <TabPanel
-            key={tabs[index].title}
-            tabId={`${name}-tab-${index}`}
-            id={`${name}-panel-${index}`}
-            selected={selected === index}
-          >
-            {content}
-          </TabPanel>
-        </CSSTransition>
-      ))}
+          {tabs.map(({ content }, index) => (
+            <TabPanel
+              key={tabs[index].title}
+              tabId={`${name}-tab-${index}`}
+              id={`${name}-panel-${index}`}
+            >
+              {content}
+            </TabPanel>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
