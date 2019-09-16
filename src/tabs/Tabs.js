@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import clamp from 'lodash.clamp';
 
 import Tab from './Tab';
 import TabList from './TabList';
@@ -53,19 +54,23 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
   const handleTouchEnd = event => {
     const end = event.nativeEvent.changedTouches[0].clientX;
+    const MIN_INDEX = 0;
+    const MAX_INDEX = tabsLength - 1;
     let nextSelected = selected;
     setIsAnimating(true);
 
     event.persist();
 
-    if (end > start && userSwiped(end - start) && selected > 0) {
+    if (end > start && userSwiped(end - start) && selected > MIN_INDEX) {
       nextSelected -= 1;
       handleTabSelect(nextSelected);
-    } else if (start > end && userSwiped(start - end) && selected < tabsLength - 1) {
+    } else if (start > end && userSwiped(start - end) && selected < MAX_INDEX) {
       nextSelected += 1;
       handleTabSelect(nextSelected);
     }
-    translateTab(nextSelected);
+
+    translateTab(clamp(nextSelected, MIN_INDEX, MAX_INDEX));
+
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
