@@ -22,8 +22,14 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const translateTab = index => {
+    setIsAnimating(true);
+
     setTranslateX(`${-(100 / tabsLength) * index}%`);
     setTranslateLineX(`${index * 100}%`);
+
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 300);
   };
 
   const handleTabSelect = index => {
@@ -56,12 +62,19 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     const end = event.nativeEvent.changedTouches[0].clientX;
     const MIN_INDEX = 0;
     const MAX_INDEX = tabsLength - 1;
+    const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
+    const timePassed = start.time - end.time;
+
     let nextSelected = selected;
-    setIsAnimating(true);
 
     event.persist();
 
-    if (end > start && userSwiped(end - start) && selected > MIN_INDEX) {
+    // todo: cleanup
+    if (
+      end.x > start.x &&
+      (userSwiped(end.x - start.x) ||
+        ((end.x - start.x) / timePassed > 0.1 && selected > MIN_INDEX))
+    ) {
       nextSelected -= 1;
       handleTabSelect(nextSelected);
     } else if (start > end && userSwiped(start - end) && selected < MAX_INDEX) {
@@ -70,10 +83,6 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     }
 
     translateTab(clamp(nextSelected, MIN_INDEX, MAX_INDEX));
-
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 300);
   };
 
   const handleTouchMove = event => {
@@ -111,7 +120,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
           </Tab>
         ))}
         <div
-          className="tabs__line"
+          className={classnames('tabs__line', { 'is-animating': isAnimating })}
           style={{
             width: `${(1 / tabsLength) * 100}%`,
             transform: `translateX(${translateLineX})`,
