@@ -11,10 +11,13 @@ import './Tabs.less';
 
 const MIN_SWIPE_DISTANCE = 50;
 
+const userSwiped = difference => Math.abs(difference) > MIN_SWIPE_DISTANCE;
+
 const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const tabsLength = tabs.length;
   const [start, setStart] = useState();
   const [translateX, setTranslateX] = useState(0);
+  const [translateLineX, setTranslateLineX] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
   const handleTabSelect = index => {
@@ -42,8 +45,6 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     event.persist();
   };
 
-  const userSwiped = difference => Math.abs(difference) > MIN_SWIPE_DISTANCE;
-
   const handleTouchEnd = event => {
     const end = event.nativeEvent.changedTouches[0].clientX;
     let nextSelected = selected;
@@ -62,6 +63,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     }
 
     setTranslateX(`${-(100 / tabsLength) * nextSelected}%`);
+    setTranslateLineX(`${nextSelected * (100 / tabsLength)}%`);
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
@@ -94,10 +96,20 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
             selected={selected === index}
             onClick={handleTabClick(index)}
             handleKeyDown={handleKeyDown(index)}
+            style={{
+              width: `${(1 / tabsLength) * 100}%`,
+            }}
           >
             {title}
           </Tab>
         ))}
+        <div
+          className="tabs__line"
+          style={{
+            width: `${(1 / tabsLength) * 100}%`,
+            left: `${translateLineX}`,
+          }}
+        />
       </TabList>
       <div className="tabs__panel-container">
         <div
