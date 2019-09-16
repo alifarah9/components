@@ -20,12 +20,18 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [translateLineX, setTranslateLineX] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const translateTab = index => {
+    setTranslateX(`${-(100 / tabsLength) * index}%`);
+    setTranslateLineX(`${index * 100}%`);
+  };
+
   const handleTabSelect = index => {
     if (index > selected) {
       // TODO: next tab
     } else if (index < selected) {
       // TODO: prev tab
     }
+    translateTab(index);
     onTabSelect(index);
   };
 
@@ -48,7 +54,6 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const handleTouchEnd = event => {
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
     let nextSelected = selected;
-
     setIsAnimating(true);
 
     event.persist();
@@ -60,19 +65,17 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       end.x > start.x &&
       (userSwiped(end.x - start.x) || ((end.x - start.x) / timePassed > 0.1 && selected > 0))
     ) {
-      handleTabSelect(selected - 1);
       nextSelected -= 1;
+      handleTabSelect(nextSelected);
     } else if (
       start.x > end.x &&
       (userSwiped(start.x - end.x) || (start.x - end.x) / timePassed > 0.1) &&
       selected < tabsLength - 1
     ) {
-      handleTabSelect(selected + 1);
       nextSelected += 1;
+      handleTabSelect(nextSelected);
     }
-
-    setTranslateX(`${-(100 / tabsLength) * nextSelected}%`);
-    setTranslateLineX(`${nextSelected * (100 / tabsLength)}%`);
+    translateTab(nextSelected);
     setTimeout(() => {
       setIsAnimating(false);
     }, 300);
@@ -116,7 +119,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
           className="tabs__line"
           style={{
             width: `${(1 / tabsLength) * 100}%`,
-            left: `${translateLineX}`,
+            transform: `translateX(${translateLineX})`,
           }}
         />
       </TabList>
