@@ -20,14 +20,18 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [translateLineX, setTranslateLineX] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const translateTab = index => {
+    setTranslateX(`${-(100 / tabsLength) * index}%`);
+    setTranslateLineX(`${index * 100}%`);
+  };
+
   const handleTabSelect = index => {
     if (index > selected) {
       // TODO: next tab
     } else if (index < selected) {
       // TODO: prev tab
     }
-    setTranslateX(`${-(100 / tabsLength) * index}%`);
-    setTranslateLineX(`${index * (100 / tabsLength)}%`);
+    translateTab(index);
     onTabSelect(index);
   };
 
@@ -49,16 +53,19 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
   const handleTouchEnd = event => {
     const end = event.nativeEvent.changedTouches[0].clientX;
-
+    let nextSelected = selected;
     setIsAnimating(true);
 
     event.persist();
 
     if (end > start && userSwiped(end - start) && selected > 0) {
-      handleTabSelect(selected - 1);
+      nextSelected -= 1;
+      handleTabSelect(nextSelected);
     } else if (start > end && userSwiped(start - end) && selected < tabsLength - 1) {
-      handleTabSelect(selected + 1);
+      nextSelected += 1;
+      handleTabSelect(nextSelected);
     }
+    translateTab(nextSelected);
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
@@ -68,6 +75,8 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     const current = event.nativeEvent.changedTouches[0].clientX;
 
     event.persist();
+
+    // todo: if more than 50% and we we're planning on transitioning the rest of the way › update tab line
 
     if (current > start) {
       setTranslateX(`${current - start}px`);
@@ -102,7 +111,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
           className="tabs__line"
           style={{
             width: `${(1 / tabsLength) * 100}%`,
-            left: `${translateLineX}`,
+            transform: `translateX(${translateLineX})`,
           }}
         />
       </TabList>
