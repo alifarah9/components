@@ -26,6 +26,8 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     } else if (index < selected) {
       // TODO: prev tab
     }
+    setTranslateX(`${-(100 / tabsLength) * index}%`);
+    setTranslateLineX(`${index * (100 / tabsLength)}%`);
     onTabSelect(index);
   };
 
@@ -47,23 +49,16 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
   const handleTouchEnd = event => {
     const end = event.nativeEvent.changedTouches[0].clientX;
-    let nextSelected = selected;
 
     setIsAnimating(true);
 
     event.persist();
 
-    // todo: cleanup
     if (end > start && userSwiped(end - start) && selected > 0) {
       handleTabSelect(selected - 1);
-      nextSelected -= 1;
     } else if (start > end && userSwiped(start - end) && selected < tabsLength - 1) {
       handleTabSelect(selected + 1);
-      nextSelected += 1;
     }
-
-    setTranslateX(`${-(100 / tabsLength) * nextSelected}%`);
-    setTranslateLineX(`${nextSelected * (100 / tabsLength)}%`);
     setTimeout(() => {
       setIsAnimating(false);
     }, 1000);
