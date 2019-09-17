@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Tabs from './Tabs';
+import Alert from '../alert';
 
 const TabsDocs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -7,15 +8,15 @@ const TabsDocs = () => {
   const tabz = [
     {
       title: 'Title 1',
-      content: <p>I am what ever</p>,
+      content: <Alert>content</Alert>,
     },
     {
       title: 'Title 2',
-      content: (
-        <p>
-          I am something <strong>completely</strong> different
-        </p>
-      ),
+      content: <Alert type="warning">different content</Alert>,
+    },
+    {
+      title: 'Title 3',
+      content: <Alert type="error">more content</Alert>,
     },
   ];
 

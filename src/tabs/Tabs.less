@@ -43,15 +43,13 @@
   }
 
   &__slider {
-    display: flex;
-
     &.is-animating {
       transition: transform 300ms;
     }
   }
 
   &__panel {
-    flex: 1;
+    display: inline-block;
 
     &--selected {
       padding: @spacer;
