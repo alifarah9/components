@@ -21,7 +21,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [translateLineX, setTranslateLineX] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const translateTab = index => {
+  const switchTab = index => {
     setIsAnimating(true);
 
     setTranslateX(`${-(100 / tabsLength) * index}%`);
@@ -33,12 +33,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   const handleTabSelect = index => {
-    if (index > selected) {
-      // TODO: next tab
-    } else if (index < selected) {
-      // TODO: prev tab
-    }
-    translateTab(index);
+    switchTab(index);
     onTabSelect(index);
   };
 
@@ -76,24 +71,33 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
         ((end.x - start.x) / timePassed > 0.1 && selected > MIN_INDEX))
     ) {
       nextSelected -= 1;
-      handleTabSelect(nextSelected);
-    } else if (start > end && userSwiped(start - end) && selected < MAX_INDEX) {
+    } else if (
+      start.x > end.x &&
+      (userSwiped(start.x - end.x) || (start.x - end.x) / timePassed > 0.1) &&
+      selected < MAX_INDEX
+    ) {
       nextSelected += 1;
+    }
+
+    nextSelected = clamp(nextSelected, MIN_INDEX, MAX_INDEX);
+
+    if (nextSelected !== selected) {
       handleTabSelect(nextSelected);
     }
 
-    translateTab(clamp(nextSelected, MIN_INDEX, MAX_INDEX));
+    switchTab(nextSelected);
   };
 
   const handleTouchMove = event => {
     const current = event.nativeEvent.changedTouches[0].clientX;
+    const tabWidth = 100 / tabsLength;
 
     event.persist();
 
     if (current > start.x) {
-      setTranslateX(`${current - start.x}px`);
+      setTranslateX(`calc(min(0,-${tabWidth * selected}% + ${current - start.x}px))`);
     } else if (start.x > current) {
-      setTranslateX(`-${start.x - current}px`);
+      setTranslateX(`calc(min(0,-${tabWidth * selected}% - ${start.x - current}px))`);
     }
   };
 
@@ -140,6 +144,9 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
               key={tabs[index].title}
               tabId={`${name}-tab-${index}`}
               id={`${name}-panel-${index}`}
+              style={{
+                width: `${(1 / tabsLength) * 100}%`,
+              }}
             >
               {content}
             </TabPanel>
