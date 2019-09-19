@@ -5,7 +5,7 @@ import Alert from '../alert';
 const TabsDocs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const tabz = [
+  const tabs = [
     {
       title: 'Title 1',
       content: <Alert>content</Alert>,
@@ -35,7 +35,7 @@ const TabsDocs = () => {
           <div className="col-md-6 m-t-2">
             <Tabs
               name="tabs-docs"
-              tabs={tabz}
+              tabs={tabs}
               selected={selectedTab}
               onTabSelect={handleTabSelect}
             />
