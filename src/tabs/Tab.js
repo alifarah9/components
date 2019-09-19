@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
+import classNames from 'classnames';
 
 const Tab = ({ children, id, disabled, panelId, selected, handleKeyDown, ...attributes }) => {
   const node = useRef(null);
@@ -18,7 +18,7 @@ const Tab = ({ children, id, disabled, panelId, selected, handleKeyDown, ...attr
   return (
     <li
       {...attributes}
-      className={cx('tabs__tab', {
+      className={classNames('tabs__tab', {
         'tabs__tab--selected': selected,
         'tabs__tab--disabled': disabled,
       })}

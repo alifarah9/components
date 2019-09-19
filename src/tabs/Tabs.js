@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import clamp from 'lodash.clamp';
 
 import Tab from './Tab';
@@ -123,7 +123,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
           </Tab>
         ))}
         <div
-          className={classnames('tabs__line', { 'is-animating': isAnimating })}
+          className={classNames('tabs__line', { 'is-animating': isAnimating })}
           style={{
             width: `${(1 / tabsLength) * 100}%`,
             transform: `translateX(${translateLineX})`,
@@ -132,7 +132,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       </TabList>
       <div className="tabs__panel-container">
         <div
-          className={classnames('tabs__slider', { 'is-animating': isAnimating })}
+          className={classNames('tabs__slider', { 'is-animating': isAnimating })}
           style={{
             width: `${tabsLength * 100}%`,
             transform: `translateX(${translateX})`,
