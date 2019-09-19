@@ -7,12 +7,9 @@ import Tab from './Tab';
 import TabList from './TabList';
 import TabPanel from './TabPanel';
 import KeyCodes from '../common/keyCodes';
+import { swipedLeftToRight, swipedRightToLeft, swipeShouldChangeTab } from './utils';
 
 import './Tabs.less';
-
-const MIN_SWIPE_DISTANCE = 50;
-
-const userSwiped = difference => Math.abs(difference) > MIN_SWIPE_DISTANCE;
 
 const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const tabsLength = tabs.length;
@@ -57,24 +54,14 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     const MIN_INDEX = 0;
     const MAX_INDEX = tabsLength - 1;
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
-    const timePassed = start.time - end.time;
 
     let nextSelected = selected;
 
     event.persist();
 
-    // todo: cleanup
-    if (
-      end.x > start.x &&
-      (userSwiped(end.x - start.x) ||
-        ((end.x - start.x) / timePassed > 0.1 && selected > MIN_INDEX))
-    ) {
+    if (swipedLeftToRight(start, end) && swipeShouldChangeTab(start, end)) {
       nextSelected -= 1;
-    } else if (
-      start.x > end.x &&
-      (userSwiped(start.x - end.x) || (start.x - end.x) / timePassed > 0.1) &&
-      selected < MAX_INDEX
-    ) {
+    } else if (swipedRightToLeft(start, end) && swipeShouldChangeTab(start, end)) {
       nextSelected += 1;
     }
 
