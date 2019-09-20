@@ -54,10 +54,18 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   useEffect(() => {
-    const direction = selected >= tabsLength - 1 ? -1 : 1;
+    const FORWARD = 1;
+    const REVERSE = -1;
+    let direction = selected >= tabsLength - 1 ? REVERSE : FORWARD;
     let newSelected = clamp(selected, MIN_INDEX, MAX_INDEX);
 
     while (isTabDisabled(newSelected)) {
+      if (direction === FORWARD && newSelected >= MAX_INDEX) {
+        direction = REVERSE;
+      } else if (direction === REVERSE && newSelected <= MIN_INDEX) {
+        direction = FORWARD;
+      }
+
       newSelected += direction;
     }
 
@@ -156,6 +164,10 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       setTranslateX(`calc(-${tabWidth * selected}% - ${Math.min(difference, containerWidth)}px)`);
     }
   };
+
+  if (!tabs.filter(({ disabled }) => !disabled).length) {
+    throw new Error('All tabs should not be disabled');
+  }
 
   return (
     <div
