@@ -54,8 +54,20 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   useEffect(() => {
-    // 1. check if the initally selected tab is disabled/valid
-    // 2. advance to the next/first available tab
+    let newSelected = clamp(selected, MIN_INDEX, MAX_INDEX);
+    let n = 0;
+
+    if (selected >= tabsLength - 1) {
+      n = -1;
+    } else {
+      n = 1;
+    }
+
+    while (isTabDisabled(newSelected)) {
+      newSelected += n;
+    }
+
+    handleTabSelect(newSelected);
   }, []);
 
   const handleTabClick = index => () => {
