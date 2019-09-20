@@ -1,6 +1,9 @@
 # v14.0.0
 ## Add tree-shakeable es6 version and individual css
 
+# v13.0.4
+## Set modal content width to 100%
+
 # v13.0.3
 ## Remove modal open body class on Dimmer unmount
 
