@@ -123,14 +123,10 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       animateLine(selected);
     }
 
-    if (swipedLeftToRight(start, end) && selected > MIN_INDEX && difference < containerWidth) {
-      setTranslateX(`calc(-${tabWidth * selected}% + ${difference}px)`);
-    } else if (
-      swipedRightToLeft(start, end) &&
-      selected < MAX_INDEX &&
-      difference < containerWidth
-    ) {
-      setTranslateX(`calc(-${tabWidth * selected}% - ${difference}px)`);
+    if (swipedLeftToRight(start, end) && selected > MIN_INDEX) {
+      setTranslateX(`calc(-${tabWidth * selected}% + ${Math.min(difference, containerWidth)}px)`);
+    } else if (swipedRightToLeft(start, end) && selected < MAX_INDEX) {
+      setTranslateX(`calc(-${tabWidth * selected}% - ${Math.min(difference, containerWidth)}px)`);
     }
   };
 
