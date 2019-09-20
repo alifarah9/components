@@ -54,17 +54,11 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   useEffect(() => {
+    const direction = selected >= tabsLength - 1 ? -1 : 1;
     let newSelected = clamp(selected, MIN_INDEX, MAX_INDEX);
-    let n = 0;
-
-    if (selected >= tabsLength - 1) {
-      n = -1;
-    } else {
-      n = 1;
-    }
 
     while (isTabDisabled(newSelected)) {
-      newSelected += n;
+      newSelected += direction;
     }
 
     handleTabSelect(newSelected);
