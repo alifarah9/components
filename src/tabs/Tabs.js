@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import clamp from 'lodash.clamp';
@@ -27,6 +27,8 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [translateLineX, setTranslateLineX] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const isTabDisabled = index => tabs[index] && tabs[index].disabled;
+
   const animateLine = index => {
     setTranslateLineX(`${index * 100}%`);
   };
@@ -50,6 +52,11 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     switchTab(index);
     onTabSelect(index);
   };
+
+  useEffect(() => {
+    // 1. check if the initally selected tab is disabled/valid
+    // 2. advance to the next/first available tab
+  }, []);
 
   const handleTabClick = index => () => {
     handleTabSelect(index);
@@ -79,12 +86,22 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
     if (swipeShouldChangeTab(start, end) || difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
         nextSelected -= 1;
+        while (isTabDisabled(nextSelected)) {
+          nextSelected -= 1;
+        }
       } else if (swipedRightToLeft(start, end)) {
         nextSelected += 1;
+        while (isTabDisabled(nextSelected)) {
+          nextSelected += 1;
+        }
       }
     }
 
     nextSelected = clamp(nextSelected, MIN_INDEX, MAX_INDEX);
+
+    if (tabs[nextSelected].disabled) {
+      nextSelected = selected;
+    }
 
     if (nextSelected !== selected) {
       handleTabSelect(nextSelected);
@@ -105,9 +122,13 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
     if (difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
-        nextSelected -= 1;
+        while (isTabDisabled(nextSelected)) {
+          nextSelected -= 1;
+        }
       } else if (swipedRightToLeft(start, end)) {
-        nextSelected += 1;
+        while (isTabDisabled(nextSelected)) {
+          nextSelected += 1;
+        }
       }
     }
 
@@ -138,13 +159,14 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       className="tabs"
     >
       <TabList>
-        {tabs.map(({ title }, index) => (
+        {tabs.map(({ title, disabled }, index) => (
           <Tab
             key={title}
             id={`${name}-tab-${index}`}
             panelId={`${name}-panel-${index}`}
             selected={selected === index}
-            onClick={handleTabClick(index)}
+            disabled={disabled}
+            onClick={disabled ? null : handleTabClick(index)}
             handleKeyDown={handleKeyDown(index)}
             style={{
               width: `${(1 / tabsLength) * 100}%`,
@@ -169,16 +191,17 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
             transform: `translateX(${translateX})`,
           }}
         >
-          {tabs.map(({ content }, index) => (
+          {tabs.map(({ content, disabled }, index) => (
             <TabPanel
               key={tabs[index].title}
               tabId={`${name}-tab-${index}`}
               id={`${name}-panel-${index}`}
+              disabled={disabled}
               style={{
                 width: `${(1 / tabsLength) * 100}%`,
               }}
             >
-              {content}
+              {disabled ? null : content}
             </TabPanel>
           ))}
         </div>

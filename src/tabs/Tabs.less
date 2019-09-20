@@ -6,6 +6,7 @@
 @transition-timing-function: ease-in-out;
 @transition-duration: 0.3s;
 @short-transition-duration: 0.15s;
+@line-thickness: 3px;
 
 .tabs {
   &__tab {
@@ -14,6 +15,7 @@
     outline: none;
     text-align: center;
     padding: @spacer;
+    margin-bottom: -@line-thickness;
     color: @brand-navy-minus-10;
     font-weight: @font-weight-semi-bold;
     transition: color @short-transition-duration @transition-timing-function;
@@ -23,11 +25,12 @@
     }
 
     &--disabled {
-      opacity: 0.5;
+      background-color: @brand-smoke-plus-20;
+      color: @brand-grey-plus-10 !important;
+      cursor: not-allowed;
     }
 
-    &:hover,
-    &:focus {
+    &:hover {
       color: @brand-light-blue;
     }
   }
@@ -40,7 +43,7 @@
   }
 
   &__line {
-    height: 3px;
+    height: @line-thickness;
     background-color: @brand-light-blue;
     transition: var(--transition-transform);
   }
