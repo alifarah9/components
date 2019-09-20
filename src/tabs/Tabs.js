@@ -16,6 +16,8 @@ import {
 
 import './Tabs.less';
 
+const TRANSITION_DURATION = 350;
+
 const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const tabsLength = tabs.length;
   const MIN_INDEX = 0;
@@ -23,13 +25,20 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [start, setStart] = useState();
   const [translateX, setTranslateX] = useState(0);
   const [translateLineX, setTranslateLineX] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const animateLine = index => {
     setTranslateLineX(`${index * 100}%`);
   };
 
   const animatePanel = index => {
+    setIsAnimating(true);
+
     setTranslateX(`${-(100 / tabsLength) * index}%`);
+
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, TRANSITION_DURATION);
   };
 
   const switchTab = index => {
@@ -157,7 +166,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       </TabList>
       <div className="tabs__panel-container">
         <div
-          className={classNames('tabs__slider')}
+          className={classNames('tabs__slider', { 'is-animating': isAnimating })}
           style={{
             width: `${tabsLength * 100}%`,
             transform: `translateX(${translateX})`,
