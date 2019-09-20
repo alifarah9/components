@@ -16,7 +16,7 @@ import {
 
 import './Tabs.less';
 
-const TRANSITION_DURATION = 350;
+const TRANSITION_DURATION = 300;
 
 const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const tabsLength = tabs.length;
@@ -135,6 +135,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       onTouchStart={changeTabOnSwipe && handleTouchStart}
       onTouchEnd={changeTabOnSwipe && handleTouchEnd}
       onTouchMove={changeTabOnSwipe && handleTouchMove}
+      className="tabs"
     >
       <TabList>
         {tabs.map(({ title }, index) => (
