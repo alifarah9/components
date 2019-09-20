@@ -49,13 +49,15 @@
     overflow: hidden;
   }
 
-  &__slider.is-animating {
-    transition: var(--transition-transform);
+  &__slider {
+    display: flex;
+
+    &.is-animating {
+      transition: var(--transition-transform);
+    }
   }
 
   &__panel {
-    display: inline-block;
-
     &--selected {
       padding: @spacer;
       border: 1px solid @brand-navy;
