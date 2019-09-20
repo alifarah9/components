@@ -60,12 +60,14 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
   const handleTouchEnd = event => {
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
+    const difference = getSwipeDifference(start, end);
+    const containerWidth = event.currentTarget.offsetWidth;
 
     let nextSelected = selected;
 
     event.persist();
 
-    if (swipeShouldChangeTab(start, end)) {
+    if (swipeShouldChangeTab(start, end) || difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
         nextSelected -= 1;
       } else if (swipedRightToLeft(start, end)) {
@@ -85,13 +87,14 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const handleTouchMove = event => {
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
     const tabWidth = 100 / tabsLength;
+    const difference = getSwipeDifference(start, end);
+    const containerWidth = event.currentTarget.offsetWidth;
 
     event.persist();
 
     let nextSelected = selected;
 
-    // todo: this needs to change to calculate if it's over 50% of the width
-    if (swipeShouldChangeTab(start, end)) {
+    if (difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
         nextSelected -= 1;
       } else if (swipedRightToLeft(start, end)) {
@@ -111,12 +114,13 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       animateLine(selected);
     }
 
-    const difference = getSwipeDifference(start, end);
-
-    // todo: this needs to somehow only go as far as the end of the next panel
-    if (swipedLeftToRight(start, end) && selected > MIN_INDEX) {
+    if (swipedLeftToRight(start, end) && selected > MIN_INDEX && difference < containerWidth) {
       setTranslateX(`calc(-${tabWidth * selected}% + ${difference}px)`);
-    } else if (swipedRightToLeft(start, end) && selected < MAX_INDEX) {
+    } else if (
+      swipedRightToLeft(start, end) &&
+      selected < MAX_INDEX &&
+      difference < containerWidth
+    ) {
       setTranslateX(`calc(-${tabWidth * selected}% - ${difference}px)`);
     }
   };
