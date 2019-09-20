@@ -7,26 +7,34 @@ import Tab from './Tab';
 import TabList from './TabList';
 import TabPanel from './TabPanel';
 import KeyCodes from '../common/keyCodes';
-import { swipedLeftToRight, swipedRightToLeft, swipeShouldChangeTab } from './utils';
+import {
+  getSwipeDifference,
+  swipedLeftToRight,
+  swipedRightToLeft,
+  swipeShouldChangeTab,
+} from './utils';
 
 import './Tabs.less';
 
 const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const tabsLength = tabs.length;
+  const MIN_INDEX = 0;
+  const MAX_INDEX = tabsLength - 1;
   const [start, setStart] = useState();
   const [translateX, setTranslateX] = useState(0);
   const [translateLineX, setTranslateLineX] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+
+  const animateLine = index => {
+    setTranslateLineX(`${index * 100}%`);
+  };
+
+  const animatePanel = index => {
+    setTranslateX(`${-(100 / tabsLength) * index}%`);
+  };
 
   const switchTab = index => {
-    setIsAnimating(true);
-
-    setTranslateX(`${-(100 / tabsLength) * index}%`);
-    setTranslateLineX(`${index * 100}%`);
-
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 300);
+    animateLine(index);
+    animatePanel(index);
   };
 
   const handleTabSelect = index => {
@@ -51,19 +59,18 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   const handleTouchEnd = event => {
-    const end = event.nativeEvent.changedTouches[0].clientX;
-    const MIN_INDEX = 0;
-    const MAX_INDEX = tabsLength - 1;
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
 
     let nextSelected = selected;
 
     event.persist();
 
-    if (swipedLeftToRight(start, end) && swipeShouldChangeTab(start, end)) {
-      nextSelected -= 1;
-    } else if (swipedRightToLeft(start, end) && swipeShouldChangeTab(start, end)) {
-      nextSelected += 1;
+    if (swipeShouldChangeTab(start, end)) {
+      if (swipedLeftToRight(start, end)) {
+        nextSelected -= 1;
+      } else if (swipedRightToLeft(start, end)) {
+        nextSelected += 1;
+      }
     }
 
     nextSelected = clamp(nextSelected, MIN_INDEX, MAX_INDEX);
@@ -76,15 +83,41 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   const handleTouchMove = event => {
-    const current = event.nativeEvent.changedTouches[0].clientX;
+    const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
     const tabWidth = 100 / tabsLength;
 
     event.persist();
 
-    if (current > start.x) {
-      setTranslateX(`calc(min(0,-${tabWidth * selected}% + ${current - start.x}px))`);
-    } else if (start.x > current) {
-      setTranslateX(`calc(min(0,-${tabWidth * selected}% - ${start.x - current}px))`);
+    let nextSelected = selected;
+
+    // todo: this needs to change to calculate if it's over 50% of the width
+    if (swipeShouldChangeTab(start, end)) {
+      if (swipedLeftToRight(start, end)) {
+        nextSelected -= 1;
+      } else if (swipedRightToLeft(start, end)) {
+        nextSelected += 1;
+      }
+    }
+
+    nextSelected = clamp(
+      nextSelected,
+      Math.max(selected - 1, MIN_INDEX),
+      Math.min(selected + 1, MAX_INDEX),
+    );
+
+    if (nextSelected !== selected) {
+      animateLine(nextSelected);
+    } else {
+      animateLine(selected);
+    }
+
+    const difference = getSwipeDifference(start, end);
+
+    // todo: this needs to somehow only go as far as the end of the next panel
+    if (swipedLeftToRight(start, end) && selected > MIN_INDEX) {
+      setTranslateX(`calc(-${tabWidth * selected}% + ${difference}px)`);
+    } else if (swipedRightToLeft(start, end) && selected < MAX_INDEX) {
+      setTranslateX(`calc(-${tabWidth * selected}% - ${difference}px)`);
     }
   };
 
@@ -111,7 +144,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
           </Tab>
         ))}
         <div
-          className={classNames('tabs__line', { 'is-animating': isAnimating })}
+          className={classNames('tabs__line')}
           style={{
             width: `${(1 / tabsLength) * 100}%`,
             transform: `translateX(${translateLineX})`,
@@ -120,7 +153,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       </TabList>
       <div className="tabs__panel-container">
         <div
-          className={classNames('tabs__slider', { 'is-animating': isAnimating })}
+          className={classNames('tabs__slider')}
           style={{
             width: `${tabsLength * 100}%`,
             transform: `translateX(${translateX})`,
