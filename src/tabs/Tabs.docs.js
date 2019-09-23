@@ -21,7 +21,7 @@ const TabsDocs = () => {
     },
     {
       title: 'Title 2',
-      disabled: false,
+      disabled: true,
       content: (
         <Alert type="warning">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta officia animi incidunt
@@ -39,7 +39,7 @@ const TabsDocs = () => {
     },
     {
       title: 'Title 3',
-      disabled: true,
+      disabled: false,
       content: (
         <Alert type="error">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error placeat doloribus nulla
