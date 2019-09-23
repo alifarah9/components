@@ -18,7 +18,8 @@ import './Tabs.less';
 
 const TRANSITION_DURATION = 300;
 
-const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
+const Tabs = ({ tabs: allTabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
+  const tabs = allTabs.filter(tab => !tab.disabled);
   const tabsLength = tabs.length;
   const MIN_INDEX = 0;
   const MAX_INDEX = tabsLength - 1;
@@ -27,10 +28,20 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   const [translateLineX, setTranslateLineX] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const isTabDisabled = index => tabs[index] && tabs[index].disabled;
+  const isTabDisabled = index => allTabs[index] && allTabs[index].disabled;
 
   const animateLine = index => {
-    setTranslateLineX(`${index * 100}%`);
+    let nextIndex = index;
+
+    // account for disabled indexes up to the passed index
+    const disabledIndexes = allTabs.slice(0, index).filter(tab => tab.disabled).length;
+
+    // account for disabled indexes from the passed index
+    while (isTabDisabled(nextIndex)) {
+      nextIndex += 1;
+    }
+
+    setTranslateLineX(`${(nextIndex + disabledIndexes) * 100}%`);
   };
 
   const animatePanel = index => {
@@ -54,22 +65,7 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
   };
 
   useEffect(() => {
-    const FORWARD = 1;
-    const REVERSE = -1;
-    let direction = selected >= tabsLength - 1 ? REVERSE : FORWARD;
-    let newSelected = clamp(selected, MIN_INDEX, MAX_INDEX);
-
-    while (isTabDisabled(newSelected)) {
-      if (direction === FORWARD && newSelected >= MAX_INDEX) {
-        direction = REVERSE;
-      } else if (direction === REVERSE && newSelected <= MIN_INDEX) {
-        direction = FORWARD;
-      }
-
-      newSelected += direction;
-    }
-
-    handleTabSelect(newSelected);
+    handleTabSelect(clamp(selected, MIN_INDEX, MAX_INDEX));
   }, []);
 
   const handleTabClick = index => () => {
@@ -136,13 +132,9 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
 
     if (difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
-        while (isTabDisabled(nextSelected)) {
-          nextSelected -= 1;
-        }
+        nextSelected -= 1;
       } else if (swipedRightToLeft(start, end)) {
-        while (isTabDisabled(nextSelected)) {
-          nextSelected += 1;
-        }
+        nextSelected += 1;
       }
     }
 
@@ -177,26 +169,29 @@ const Tabs = ({ tabs, selected, onTabSelect, name, changeTabOnSwipe }) => {
       className="tabs"
     >
       <TabList>
-        {tabs.map(({ title, disabled }, index) => (
-          <Tab
-            key={title}
-            id={`${name}-tab-${index}`}
-            panelId={`${name}-panel-${index}`}
-            selected={selected === index}
-            disabled={disabled}
-            onClick={disabled ? null : handleTabClick(index)}
-            handleKeyDown={handleKeyDown(index)}
-            style={{
-              width: `${(1 / tabsLength) * 100}%`,
-            }}
-          >
-            {title}
-          </Tab>
-        ))}
+        {allTabs.map(({ title, disabled }, index) => {
+          const selectIndex = tabs.findIndex(tab => tab.title === title);
+          return (
+            <Tab
+              key={title}
+              id={`${name}-tab-${index}`}
+              panelId={`${name}-panel-${index}`}
+              selected={selected === selectIndex}
+              disabled={disabled}
+              onClick={disabled ? null : handleTabClick(selectIndex)}
+              handleKeyDown={handleKeyDown(selectIndex)}
+              style={{
+                width: `${(1 / allTabs.length) * 100}%`,
+              }}
+            >
+              {title}
+            </Tab>
+          );
+        })}
         <div
           className={classNames('tabs__line')}
           style={{
-            width: `${(1 / tabsLength) * 100}%`,
+            width: `${(1 / allTabs.length) * 100}%`,
             transform: `translateX(${translateLineX})`,
           }}
         />
