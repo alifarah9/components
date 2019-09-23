@@ -29,7 +29,7 @@ const Tab = ({ children, id, disabled, panelId, selected, handleKeyDown, ...attr
       aria-disabled={disabled ? 'true' : 'false'}
       aria-controls={panelId}
       tabIndex="0"
-      onKeyDown={handleKeyDown}
+      onKeyDown={disabled ? null : handleKeyDown}
     >
       {children}
     </li>

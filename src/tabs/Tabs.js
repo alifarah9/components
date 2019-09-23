@@ -45,6 +45,24 @@ class Tabs extends React.Component {
     document.body.addEventListener('touchmove', this.disableTouchBody, { passive: false });
   }
 
+  componentDidUpdate(prevProps) {
+    const currentSelected = this.props.selected;
+    const prevSelected = prevProps.selected;
+    const currentSelectedTab = this.props.tabs[currentSelected];
+    const prevSelectedTab = prevProps.tabs[prevSelected];
+
+    if (
+      currentSelected !== prevSelected ||
+      currentSelectedTab.disabled !== prevSelectedTab.disabled
+    ) {
+      this.switchTab(this.props.selected);
+    }
+  }
+
+  componentWillUnmount() {
+    document.body.removeEventListener('touchmove', this.disableTouchBody);
+  }
+
   isTabDisabled = index => {
     const { tabs: allTabs } = this.props;
 
@@ -55,10 +73,8 @@ class Tabs extends React.Component {
     const { tabs: allTabs } = this.props;
     let nextIndex = index;
 
-    // account for disabled indexes up to the passed index
     const disabledIndexes = allTabs.slice(0, index).filter(tab => tab.disabled).length;
 
-    // account for disabled indexes from the passed index
     while (this.isTabDisabled(nextIndex)) {
       nextIndex += 1;
     }
