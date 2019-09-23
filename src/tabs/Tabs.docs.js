@@ -2,7 +2,7 @@ import React from 'react';
 import Tabs from './Tabs';
 import Alert from '../alert';
 
-const tabs = [
+export const tabs = [
   {
     title: 'Title 1',
     disabled: false,
