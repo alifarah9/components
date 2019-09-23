@@ -1,3 +1,9 @@
+# v13.0.4
+## Set modal content width to 100%
+
+# v13.0.3
+## Remove modal open body class on Dimmer unmount
+
 # v13.0.2
 ## Make FormControl Select searchable
 
