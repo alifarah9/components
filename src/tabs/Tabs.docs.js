@@ -3,11 +3,12 @@ import Tabs from './Tabs';
 import Alert from '../alert';
 
 const TabsDocs = () => {
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   const tabs = [
     {
       title: 'Title 1',
+      disabled: false,
       content: (
         <Alert>
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum totam debitis similique
@@ -20,7 +21,7 @@ const TabsDocs = () => {
     },
     {
       title: 'Title 2',
-      disabled: true,
+      disabled: false,
       content: (
         <Alert type="warning">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta officia animi incidunt
