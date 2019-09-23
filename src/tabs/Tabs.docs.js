@@ -50,6 +50,7 @@ const tabs = [
 class TabsDocs extends React.PureComponent {
   state = {
     tabs: tabs.map(tab => ({ ...tab })),
+    selected: 0,
   };
 
   componentDidMount() {
@@ -59,6 +60,10 @@ class TabsDocs extends React.PureComponent {
       this.setState({ tabs: newTabs });
     }, 2000);
   }
+
+  handleTabSelect = index => {
+    this.setState({ selected: index });
+  };
 
   render() {
     return (
@@ -70,7 +75,12 @@ class TabsDocs extends React.PureComponent {
               <p>Wat is tab</p>
             </div>
             <div className="col-md-6 m-t-2">
-              <Tabs name="tabs-docs" tabs={this.state.tabs} selected={0} onTabSelect={() => {}} />
+              <Tabs
+                name="tabs-docs"
+                tabs={this.state.tabs}
+                selected={this.state.selected}
+                onTabSelect={this.handleTabSelect}
+              />
             </div>
           </div>
         </section>
