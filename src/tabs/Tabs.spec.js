@@ -28,23 +28,14 @@ describe('Tabs', () => {
     expect(component.find(Tabs).props()).toEqual({ ...props });
   });
 
-  it('switches to the most relevant enabled tab after mounting with invalid props', () => {
-    props = {
-      ...props,
-      selected: 99,
-    };
-    component = mount(<Tabs {...props} />);
-    component.update();
-    // expect(component.state().translateX).toEqual(true);
-    // expect(component.state().translateLineX).toEqual(true);
-  });
-
   it('disables vertical movement after swiping', () => {
-    // expect(true).toBe(false);
+    expect(true).toBe(false);
   });
 
   it('changes to the next enabled tab after swiping', () => {
-    // expect(true).toBe(false);
+    // component.simulate('touchstart', createStartTouchEventObject({ x: 0, y: 0 }));
+    // component.simulate('touchmove', createMoveTouchEventObject({ x: 50, y: 0 }));
+    expect(true).toBe(false);
   });
 
   it('renders the correct amount of tab titles and panels', () => {
@@ -54,43 +45,62 @@ describe('Tabs', () => {
     expect(component.find(Tab).length).toBe(props.tabs.length);
   });
 
-  it('updates the slider translateX when changing tabs', () => {
-    const getSliderStyles = () => getComputedStyle(component.find('.tabs__slider').getDOMNode());
-
-    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(0%)');
-    component.setProps({ selected: 1 });
-    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-100%)');
-    component.setProps({ selected: 2 });
-    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-200%)');
-    component.setProps({ selected: 3 });
-    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-300%)');
-    component.setProps({ selected: 4 });
-    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-400%)');
-  });
-
-  it('updates the selected line translateX when changing tabs', () => {
+  it('updates transforms properly when changing tabs', () => {
     const getLineStyles = () => getComputedStyle(component.find('.tabs__line').getDOMNode());
+    const getSliderStyles = () => getComputedStyle(component.find('.tabs__slider').getDOMNode());
+    props = {
+      ...props,
+      tabs: generateTabs([false, true, false, false, false]),
+    };
+    component = mount(<Tabs {...props} />);
 
     expect(getLineStyles().getPropertyValue('transform')).toBe('translateX(0%)');
+    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(0%)');
+
     component.setProps({ selected: 1 });
+    expect(getLineStyles().getPropertyValue('transform')).toBe('translateX(200%)');
+    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-25%)');
+
+    component.setProps({ selected: 99 });
+    expect(getLineStyles().getPropertyValue('transform')).toBe('translateX(400%)');
+    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-75%)');
+
+    component.setProps({ selected: 2 });
     expect(getLineStyles().getPropertyValue('transform')).toBe('translateX(300%)');
+    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-50%)');
+
+    component.setProps({ selected: 3 });
+    expect(getLineStyles().getPropertyValue('transform')).toBe('translateX(400%)');
+    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-75%)');
+
+    component.setProps({ selected: 4 });
+    expect(getLineStyles().getPropertyValue('transform')).toBe('translateX(400%)');
+    expect(getSliderStyles().getPropertyValue('transform')).toBe('translateX(-75%)');
   });
 
   it('calls the handleTabSelect callback and updates the selected tab when a tab is selected', () => {
-    // expect(true).toBe(false);
+    expect(true).toBe(false);
   });
-
-  function generateTabs() {
-    return [
-      {
-        disabled: false,
-      },
-      {
-        disabled: true,
-      },
-      {
-        disabled: true,
-      },
-    ].map((tab, index) => ({ ...tab, title: `Title ${index}`, content: <p>Content {index}</p> }));
-  }
 });
+
+const defaultDisableds = [false, true, false];
+
+function generateTabs(disableds = defaultDisableds) {
+  return disableds.map((disabled, index) => ({
+    disabled,
+    title: `Title ${index}`,
+    content: <p>Content {index}</p>,
+  }));
+}
+
+function createClientXY(x, y) {
+  return { clientX: x, clientY: y };
+}
+
+export function createStartTouchEventObject({ x = 0, y = 0 }) {
+  return { nativeEvent: { touches: [createClientXY(x, y)] } };
+}
+
+export function createMoveTouchEventObject({ x = 0, y = 0 }) {
+  return { nativeEvent: { changedTouches: [createClientXY(x, y)] } };
+}
