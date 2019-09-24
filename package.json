@@ -142,7 +142,7 @@
     "dev:watch-less": "gulp lessWatcher",
     "build": "npm-run-all build:*",
     "build:clean": "rm -rf lib build",
-    "build:emotionFix": "node ./emotionFix.js",
+    "build:emotion-fix": "node ./emotionFix.js",
     "build:compile-css": "gulp lessCompiler",
     "build:umd": "rollup -c",
     "build:es2015": "babel src -d lib --ignore '**/*.spec.js','**/*.docs.js'",
