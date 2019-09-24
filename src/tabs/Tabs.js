@@ -157,12 +157,13 @@ class Tabs extends React.Component {
 
     nextSelected = clamp(nextSelected, MIN_INDEX, this.MAX_INDEX);
 
+    this.switchTab(nextSelected);
+
     if (nextSelected !== selected) {
       this.handleTabSelect(nextSelected);
     }
 
     this.setState({ isSwiping: false });
-    this.switchTab(nextSelected);
   };
 
   getContainerWidth = event => event.currentTarget.offsetWidth;
@@ -173,7 +174,8 @@ class Tabs extends React.Component {
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
     const tabWidth = 100 / this.filteredTabsLength;
     const difference = getSwipeDifference(start, end);
-    const elasticDrag = 100 * (1 - Math.E ** (-0.002 * difference));
+    const elasticDrag =
+      Math.min(150, window.innerWidth / 3) * (1 - Math.E ** (-0.005 * difference));
     const containerWidth = this.getContainerWidth(event);
 
     event.persist();
