@@ -9,6 +9,10 @@ import pkg from './package.json';
 // Rollup
 const input = 'src/index.js';
 const external = ['react', 'react-dom', 'prop-types'];
+
+// Rollup can resolve only explicit exports.
+// https://github.com/rollup/rollup/issues/2671
+// https://github.com/rollup/rollup-plugin-commonjs
 const namedExports = {
   'node_modules/@transferwise/formatting/dist/formatting.js': [
     'formatAmount',
