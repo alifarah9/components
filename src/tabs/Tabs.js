@@ -56,9 +56,9 @@ class Tabs extends React.Component {
     if (
       currentSelected !== prevSelected ||
       currentDisabledTabsLength !== prevDisabledTabsLength ||
-      (currentSelectedTab &&
-        currentSelectedTab.disabled !== prevSelectedTab &&
-        prevSelectedTab.disabled)
+      (currentSelectedTab && prevSelectedTab
+        ? currentSelectedTab.disabled !== prevSelectedTab.disabled
+        : false)
     ) {
       this.handleTabSelect(clamp(currentSelected, MIN_INDEX, this.MAX_INDEX));
     }
