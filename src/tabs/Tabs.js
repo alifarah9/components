@@ -50,12 +50,17 @@ class Tabs extends React.Component {
     const prevSelected = prevProps.selected;
     const currentSelectedTab = this.props.tabs[currentSelected];
     const prevSelectedTab = prevProps.tabs[prevSelected];
+    const currentDisabledTabsLength = this.props.tabs.filter(tabFilter).length;
+    const prevDisabledTabsLength = prevProps.tabs.filter(tabFilter).length;
 
     if (
       currentSelected !== prevSelected ||
-      currentSelectedTab.disabled !== prevSelectedTab.disabled
+      currentDisabledTabsLength !== prevDisabledTabsLength ||
+      (currentSelectedTab &&
+        currentSelectedTab.disabled !== prevSelectedTab &&
+        prevSelectedTab.disabled)
     ) {
-      this.switchTab(this.props.selected);
+      this.handleTabSelect(clamp(currentSelected, MIN_INDEX, this.MAX_INDEX));
     }
   }
 
