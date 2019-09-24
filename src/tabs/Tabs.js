@@ -165,13 +165,15 @@ class Tabs extends React.Component {
     this.switchTab(nextSelected);
   };
 
+  getContainerWidth = event => event.currentTarget.offsetWidth;
+
   handleTouchMove = event => {
     const { start } = this.state;
     const { selected } = this.props;
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
     const tabWidth = 100 / this.filteredTabsLength;
     const difference = getSwipeDifference(start, end);
-    const containerWidth = event.currentTarget.offsetWidth;
+    const containerWidth = this.getContainerWidth(event);
 
     event.persist();
 
@@ -180,7 +182,7 @@ class Tabs extends React.Component {
     if (difference > 5) {
       this.setState({ isSwiping: true });
     }
-
+    // console.log('difference:', difference, containerWidth, difference / containerWidth);
     if (difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
         nextSelected -= 1;
