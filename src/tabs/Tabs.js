@@ -173,6 +173,7 @@ class Tabs extends React.Component {
     const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
     const tabWidth = 100 / this.filteredTabsLength;
     const difference = getSwipeDifference(start, end);
+    const elasticDrag = 100 * (1 - Math.E ** (-0.002 * difference));
     const containerWidth = this.getContainerWidth(event);
 
     event.persist();
@@ -182,7 +183,7 @@ class Tabs extends React.Component {
     if (difference > 5) {
       this.setState({ isSwiping: true });
     }
-    // console.log('difference:', difference, containerWidth, difference / containerWidth);
+
     if (difference / containerWidth >= 0.5) {
       if (swipedLeftToRight(start, end)) {
         nextSelected -= 1;
@@ -203,13 +204,25 @@ class Tabs extends React.Component {
       this.animateLine(selected);
     }
 
-    if (swipedLeftToRight(start, end) && selected > MIN_INDEX) {
+    let dragDifference;
+
+    if (swipedLeftToRight(start, end)) {
+      if (selected > MIN_INDEX) {
+        dragDifference = `+ ${Math.min(difference, containerWidth)}`;
+      } else {
+        dragDifference = `+ ${elasticDrag}`;
+      }
+    } else if (swipedRightToLeft(start, end)) {
+      if (selected < this.MAX_INDEX) {
+        dragDifference = `- ${Math.min(difference, containerWidth)}`;
+      } else {
+        dragDifference = `- ${elasticDrag}`;
+      }
+    }
+
+    if (dragDifference) {
       this.setState({
-        translateX: `calc(-${tabWidth * selected}% + ${Math.min(difference, containerWidth)}px)`,
-      });
-    } else if (swipedRightToLeft(start, end) && selected < this.MAX_INDEX) {
-      this.setState({
-        translateX: `calc(-${tabWidth * selected}% - ${Math.min(difference, containerWidth)}px)`,
+        translateX: `calc(-${tabWidth * selected}% ${dragDifference}px)`,
       });
     }
   };

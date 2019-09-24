@@ -53,14 +53,6 @@ class TabsDocs extends React.PureComponent {
     selected: 0,
   };
 
-  componentDidMount() {
-    setTimeout(() => {
-      const newTabs = tabs.map(tab => ({ ...tab }));
-      newTabs[0].disabled = true;
-      this.setState({ tabs: newTabs });
-    }, 2000);
-  }
-
   handleTabSelect = index => {
     this.setState({ selected: index });
   };
