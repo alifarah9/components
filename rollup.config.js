@@ -31,7 +31,7 @@ const babelPlugins = [
 ];
 const exclude = 'node_modules/**';
 const presets = [
-  ["@babel/env"],
+  "@babel/env",
   "@babel/preset-react"
 ];
 
