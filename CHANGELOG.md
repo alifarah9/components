@@ -1,3 +1,6 @@
+# v13.1.0
+## Add countryCode property to phonNumberInput
+
 # v13.0.4
 ## Set modal content width to 100%
 

@@ -29,6 +29,7 @@ export default class FormControl extends PureComponent {
     placeholder: Types.string,
     step: Types.number,
     locale: Types.string,
+    countryCode: Types.string,
     options: Types.arrayOf(
       Types.shape({
         label: Types.string.isRequired,
@@ -105,6 +106,7 @@ export default class FormControl extends PureComponent {
     id: null,
     placeholder: null,
     locale: null,
+    countryCode: null,
     options: [],
     step: 1,
     disabled: false,
@@ -199,6 +201,7 @@ export default class FormControl extends PureComponent {
       placeholder,
       step,
       locale,
+      countryCode,
       type,
       options,
       disabled,
@@ -347,6 +350,7 @@ export default class FormControl extends PureComponent {
           <PhoneNumberInput
             disabled={disabled}
             locale={locale}
+            countryCode={countryCode}
             onBlur={this.handleOnBlur}
             onChange={this.handleOnChange}
             onFocus={this.handleOnFocus}
