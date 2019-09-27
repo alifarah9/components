@@ -1,21 +1,15 @@
 const MIN_SWIPE_DISTANCE = 50;
 const MIN_SWIPE_VELOCITY = 0.1;
 
-const getSwipeVelocity = (start, end) => {
-  const timePassed = end.time - start.time;
-
-  if (swipedLeftToRight(start, end)) {
-    return (end.x - start.x) / timePassed;
-  } else if (swipedRightToLeft(start, end)) {
-    return (start.x - end.x) / timePassed;
-  }
-
-  return 0;
-};
-
 const swipedSignificantDistance = difference => Math.abs(difference) > MIN_SWIPE_DISTANCE;
 
 const swipedWithSignificantVelocity = velocity => velocity > MIN_SWIPE_VELOCITY;
+
+const getSwipeVelocity = (start, end) => {
+  const timePassed = end.time - start.time;
+
+  return getSwipeDifference(start, end) / timePassed;
+};
 
 export const getSwipeDifference = (start, end) => {
   if (swipedLeftToRight(start, end)) {
