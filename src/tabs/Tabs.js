@@ -166,11 +166,11 @@ class Tabs extends React.Component {
 
     nextSelected = clamp(nextSelected, MIN_INDEX, this.MAX_INDEX);
 
-    this.switchTab(nextSelected);
-
     if (nextSelected !== selected) {
       this.handleTabSelect(nextSelected);
     }
+
+    this.switchTab(nextSelected);
 
     this.setState({ isSwiping: false, isScrolling: false });
   };
