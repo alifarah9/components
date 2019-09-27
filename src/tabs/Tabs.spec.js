@@ -32,8 +32,17 @@ describe('Tabs', () => {
     component.simulate('touchstart', createStartTouchEventObject({ x: 0, y: 0 }));
     component.simulate('touchmove', createMoveTouchEventObject({ x: 10, y: 0 }));
     expect(component.state().isSwiping).toBe(true);
-    component.simulate('touchend', createMoveTouchEventObject({ x: 20, y: 0 }));
+    component.simulate('touchend', createMoveTouchEventObject({ x: 10, y: 0 }));
     expect(component.state().isSwiping).toBe(false);
+  });
+
+  it('disables horizontal movement after scrolling', () => {
+    expect(component.state().isScrolling).toBe(false);
+    component.simulate('touchstart', createStartTouchEventObject({ x: 0, y: 0 }));
+    component.simulate('touchmove', createMoveTouchEventObject({ x: 0, y: 10 }));
+    expect(component.state().isScrolling).toBe(true);
+    component.simulate('touchend', createMoveTouchEventObject({ x: 0, y: 10 }));
+    expect(component.state().isScrolling).toBe(false);
   });
 
   it('calls onTabSelect when switching tabs', () => {

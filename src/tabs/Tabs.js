@@ -28,6 +28,7 @@ class Tabs extends React.Component {
     translateLineX: 0,
     isAnimating: false,
     isSwiping: false,
+    isScrolling: false,
   };
 
   get filteredTabsLength() {
@@ -130,7 +131,11 @@ class Tabs extends React.Component {
 
   handleTouchStart = event => {
     this.setState({
-      start: { x: event.nativeEvent.touches[0].clientX, time: Date.now() },
+      start: {
+        x: event.nativeEvent.touches[0].clientX,
+        y: event.nativeEvent.touches[0].clientY,
+        time: Date.now(),
+      },
     });
 
     event.persist();
@@ -139,7 +144,11 @@ class Tabs extends React.Component {
   handleTouchEnd = event => {
     const { start } = this.state;
     const { selected } = this.props;
-    const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
+    const end = {
+      x: event.nativeEvent.changedTouches[0].clientX,
+      y: event.nativeEvent.changedTouches[0].clientY,
+      time: Date.now(),
+    };
     const difference = getSwipeDifference(start, end);
     const containerWidth = event.currentTarget.offsetWidth;
 
@@ -163,69 +172,84 @@ class Tabs extends React.Component {
       this.handleTabSelect(nextSelected);
     }
 
-    this.setState({ isSwiping: false });
+    this.setState({ isSwiping: false, isScrolling: false });
   };
 
   getContainerWidth = event => event.currentTarget.offsetWidth;
 
   handleTouchMove = event => {
-    const { start } = this.state;
+    const { start, isScrolling } = this.state;
     const { selected } = this.props;
-    const end = { x: event.nativeEvent.changedTouches[0].clientX, time: Date.now() };
+    const end = {
+      x: event.nativeEvent.changedTouches[0].clientX,
+      y: event.nativeEvent.changedTouches[0].clientY,
+      time: Date.now(),
+    };
     const tabWidth = 100 / this.filteredTabsLength;
     const difference = getSwipeDifference(start, end);
+    const containerWidth = this.getContainerWidth(event);
+    const yAxisDifference = getSwipeDifference(start, end, 'y');
+
+    /*
+     `elasticDrag` is the translateX value, which slows down as the difference increases
+     `1 - Math.E ** (-0.005 * difference)` provides a % value of how far we want to translate (0.005 being the rate)
+     `Math.min(150, window.innerWidth / 3)` provides the maximum translate value
+    */
     const elasticDrag =
       Math.min(150, window.innerWidth / 3) * (1 - Math.E ** (-0.005 * difference));
-    const containerWidth = this.getContainerWidth(event);
 
     event.persist();
 
-    let nextSelected = selected;
+    if (!isScrolling) {
+      let nextSelected = selected;
 
-    if (difference > 5) {
-      this.setState({ isSwiping: true });
-    }
+      if (difference > 5) {
+        this.setState({ isSwiping: true });
+      } else if (yAxisDifference > 5) {
+        this.setState({ isScrolling: true });
+      }
 
-    if (difference / containerWidth >= 0.5) {
+      if (difference / containerWidth >= 0.5) {
+        if (swipedLeftToRight(start, end)) {
+          nextSelected -= 1;
+        } else if (swipedRightToLeft(start, end)) {
+          nextSelected += 1;
+        }
+      }
+
+      nextSelected = clamp(
+        nextSelected,
+        Math.max(selected - 1, MIN_INDEX),
+        Math.min(selected + 1, this.MAX_INDEX),
+      );
+
+      if (nextSelected !== selected) {
+        this.animateLine(nextSelected);
+      } else {
+        this.animateLine(selected);
+      }
+
+      let dragDifference;
+
       if (swipedLeftToRight(start, end)) {
-        nextSelected -= 1;
+        if (selected > MIN_INDEX) {
+          dragDifference = `+ ${Math.min(difference, containerWidth)}`;
+        } else {
+          dragDifference = `+ ${elasticDrag}`;
+        }
       } else if (swipedRightToLeft(start, end)) {
-        nextSelected += 1;
+        if (selected < this.MAX_INDEX) {
+          dragDifference = `- ${Math.min(difference, containerWidth)}`;
+        } else {
+          dragDifference = `- ${elasticDrag}`;
+        }
       }
-    }
 
-    nextSelected = clamp(
-      nextSelected,
-      Math.max(selected - 1, MIN_INDEX),
-      Math.min(selected + 1, this.MAX_INDEX),
-    );
-
-    if (nextSelected !== selected) {
-      this.animateLine(nextSelected);
-    } else {
-      this.animateLine(selected);
-    }
-
-    let dragDifference;
-
-    if (swipedLeftToRight(start, end)) {
-      if (selected > MIN_INDEX) {
-        dragDifference = `+ ${Math.min(difference, containerWidth)}`;
-      } else {
-        dragDifference = `+ ${elasticDrag}`;
+      if (dragDifference) {
+        this.setState({
+          translateX: `calc(-${tabWidth * selected}% ${dragDifference}px)`,
+        });
       }
-    } else if (swipedRightToLeft(start, end)) {
-      if (selected < this.MAX_INDEX) {
-        dragDifference = `- ${Math.min(difference, containerWidth)}`;
-      } else {
-        dragDifference = `- ${elasticDrag}`;
-      }
-    }
-
-    if (dragDifference) {
-      this.setState({
-        translateX: `calc(-${tabWidth * selected}% ${dragDifference}px)`,
-      });
     }
   };
 

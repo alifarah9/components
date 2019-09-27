@@ -11,13 +11,8 @@ const getSwipeVelocity = (start, end) => {
   return getSwipeDifference(start, end) / timePassed;
 };
 
-export const getSwipeDifference = (start, end) => {
-  if (swipedLeftToRight(start, end)) {
-    return end.x - start.x;
-  } else if (swipedRightToLeft(start, end)) {
-    return start.x - end.x;
-  }
-  return 0;
+export const getSwipeDifference = (start, end, axis = 'x') => {
+  return Math.abs(start[axis] - end[axis]);
 };
 
 export const swipedLeftToRight = (start, end) => {
