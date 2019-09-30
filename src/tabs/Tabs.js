@@ -178,7 +178,7 @@ class Tabs extends React.Component {
   getContainerWidth = event => event.currentTarget.offsetWidth;
 
   handleTouchMove = event => {
-    const { start, isScrolling } = this.state;
+    const { start, isScrolling, isSwiping } = this.state;
     const { selected } = this.props;
     const end = {
       x: event.nativeEvent.changedTouches[0].clientX,
@@ -205,7 +205,7 @@ class Tabs extends React.Component {
 
       if (difference > 5) {
         this.setState({ isSwiping: true });
-      } else if (yAxisDifference > 5) {
+      } else if (yAxisDifference > 5 && !isSwiping) {
         this.setState({ isScrolling: true });
       }
 
