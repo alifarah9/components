@@ -168,9 +168,9 @@ class Tabs extends React.Component {
 
     if (nextSelected !== selected) {
       this.handleTabSelect(nextSelected);
+    } else {
+      this.switchTab(nextSelected);
     }
-
-    this.switchTab(nextSelected);
 
     this.setState({ isSwiping: false, isScrolling: false });
   };
