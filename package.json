@@ -76,7 +76,7 @@
     "postcss-safe-parser": "4.0.1",
     "prettier-eslint-cli": "^5.0.0",
     "prop-types": "^15.6.1",
-    "react": "16.8.6",
+    "react": "16.10.1",
     "react-dev-utils": "^9.0.1",
     "react-dom": "16.8.6",
     "release-to-github-with-changelog": "^1.2.2",
@@ -95,7 +95,7 @@
     "bootstrap": "github:transferwise/bootstrap#v5.18.15",
     "currency-flags": "^1.2.1",
     "prop-types": "^15.6.1",
-    "react": "16.8.6",
+    "react": "16.10.1",
     "react-dev-utils": "^9.0.1",
     "react-dom": "16.8.6"
   },
