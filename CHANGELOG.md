@@ -1,5 +1,5 @@
-# v14.0.0
-## Add tree-shakeable es6 version and individual css
+# v14.0.0-beta.0
+## [BETA] Add tree-shakeable es6 version and individual css
 
 # v13.0.4
 ## Set modal content width to 100%
