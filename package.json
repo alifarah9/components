@@ -3,8 +3,7 @@
   "version": "14.0.0-beta.0",
   "description": "TransferWise styleguide components in react",
   "license": "MIT",
-  "main": "./build/main.js",
-  "module": "./lib/index.js",
+  "main": "./lib/index.js",
   "style": "./build/main.css",
   "sideEffects": false,
   "repository": {
