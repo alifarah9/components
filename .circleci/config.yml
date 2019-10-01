@@ -131,7 +131,7 @@ workflows:
       - publish-prerelease:
           context: frontend-publish
           requires:
-            - deploy-docs-to-root
+            - test
           filters:
             branches:
               only: beta
