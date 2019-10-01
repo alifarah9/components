@@ -1,3 +1,6 @@
+# v14.0.0-beta.1
+## [BETA] Tree-shakable ES6 version, changed main entry point to lib
+
 # v14.0.0-beta.0
 ## [BETA] Add tree-shakeable es6 version and individual css
 
