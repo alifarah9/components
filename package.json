@@ -33,7 +33,7 @@
     "bootstrap": "github:transferwise/bootstrap#v5.18.15",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "css-loader": "2.1.1",
+    "css-loader": "3.2.0",
     "currency-flags": "^1.2.1",
     "deploy-directory-on-branch-to-gh-pages": "^0.2.5",
     "dotenv": "6.2.0",
