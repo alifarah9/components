@@ -561,4 +561,29 @@ describe('Field', () => {
       expect(component.find(Alert)).toHaveLength(1);
     });
   });
+
+  describe('when field is disabled', () => {
+    beforeEach(() => {
+      props = {
+        field: {
+          label: 'Control label',
+          type: FieldTypes.STRING,
+          format: FieldFormats.BASE_64_URL,
+        },
+        disabled: true
+      };
+      component = shallow(<Field {...{ ...defaultProps, ...props }} />);
+    });
+
+    it('should render a disabled field', () => {
+      expect(component.find(FormControl)).toHaveLength(1);
+      expect(
+        component
+          .find(FormControl)
+          .first()
+          .props()["disabled"]
+      ).toBe(true);
+    });
+
+  });
 });

@@ -279,7 +279,7 @@ export default class Field extends Component {
   }
 
   render() {
-    const { name, field, value, locale, label } = this.props;
+    const { name, field, value, locale, label, disabled } = this.props;
 
     const control = field.control || getControlType(field);
     const alert = this.updateAlert(control);
@@ -307,6 +307,7 @@ export default class Field extends Component {
           {...field}
           type={control}
           name={name}
+          disabled={disabled}
           locale={locale}
           value={value}
           onChange={event => this.onChange(event)}
