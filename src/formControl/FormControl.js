@@ -1,23 +1,20 @@
 import React, { PureComponent } from 'react';
 import Types from 'prop-types';
 import { FormControlType } from './FormControlType';
-
-import {
-  Checkbox,
-  DateInput,
-  DateLookup,
-  InputWithDisplayFormat,
-  PhoneNumberInput,
-  RadioGroup,
-  Select,
-  TextareaWithDisplayFormat,
-  Upload,
-} from '..';
+import Checkbox from '../checkbox';
+import DateInput from '../dateInput';
+import DateLookup from '../dateLookup';
+import InputWithDisplayFormat from '../inputWithDisplayFormat';
+import PhoneNumberInput from '../phoneNumberInput';
+import RadioGroup from '../radioGroup';
+import Select from '../select';
+import TextareaWithDisplayFormat from '../textareaWithDisplayFormat';
+import Upload from '../upload';
 
 import { Sizes } from '../common';
 import { MonthFormat } from '../common/dateUtils';
 
-import './FormControl.less';
+import './FormControl.css';
 
 const ACCEPTED_FORMAT = ['*', 'image/*', 'application/*'];
 
@@ -61,6 +58,7 @@ export default class FormControl extends PureComponent {
     // @TODO To be implemented in a second iteration.
     // validationAsync: Types.func
     searchPlaceholder: Types.string,
+    searchValue: Types.string,
     onSearchChange: Types.func,
     size: Types.oneOf(Object.values(Sizes)),
     uploadProps: Types.shape({
@@ -121,6 +119,7 @@ export default class FormControl extends PureComponent {
     maxLength: null,
     value: null,
     searchPlaceholder: null,
+    searchValue: null,
     onSearchChange: null,
     size: Sizes.MEDIUM,
     uploadProps: {},
@@ -209,6 +208,7 @@ export default class FormControl extends PureComponent {
       min,
       max,
       searchPlaceholder,
+      searchValue,
       onSearchChange,
       size,
       uploadProps,
@@ -264,6 +264,7 @@ export default class FormControl extends PureComponent {
             disabled={disabled}
             placeholder={placeholder}
             searchPlaceholder={searchPlaceholder}
+            searchValue={searchValue}
             onSearchChange={onSearchChange}
           />
         );

@@ -1,3 +1,16 @@
+# v14.0.0
+## Add tree-shakeable es6 version and individual css
+
+# v13.0.7
+## Fix popover positioning within tables
+When the popover is placed within a table, the preferredPosition prop will be respected in more cases rather than being incorrectly overridden. 
+
+# v13.0.6
+## Prevent onBlur triggering when openning searchable select
+
+# v13.0.5
+## Add searchValue prop to formControl
+
 # v13.0.4
 ## Set modal content width to 100%
 
